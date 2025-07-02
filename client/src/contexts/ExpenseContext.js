@@ -83,11 +83,20 @@ export function ExpenseProvider({ children }) {
 
   const deleteExpense = async (id) => {
     if (!currentUser || !familyGroup) return;
-    await deleteDoc(doc(db, 'expenses', id));
+    try {
+      await deleteDoc(doc(db, 'expenses', id));
+    } catch (error) {
+      console.error('Error deleting expense:', error);
+    }
   };
 
   const closeBill = async () => {
     if (!currentUser || !familyGroup) return;
+
+    if (expenses.length === 0) {
+      alert('Não há despesas para fechar.');
+      return;
+    }
 
     const batch = writeBatch(db);
     expenses.forEach(expense => {
@@ -95,8 +104,13 @@ export function ExpenseProvider({ children }) {
       batch.update(expenseRef, { archived: true });
     });
 
-    await batch.commit();
-    alert('Fatura fechada! O painel foi limpo para o próximo ciclo.');
+    try {
+      await batch.commit();
+      alert('Fatura fechada! O painel foi limpo para o próximo ciclo.');
+    } catch (error) {
+      console.error('Error closing bill:', error);
+      alert('Erro ao fechar fatura: ' + error.message);
+    }
   };
 
   const value = {

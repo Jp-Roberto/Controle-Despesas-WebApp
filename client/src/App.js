@@ -33,7 +33,6 @@ function ExpenseForm() {
 
     setErrors({}); // Limpa os erros se a validação passar
     addExpense({
-      id: Date.now(),
       description,
       amount: parseFloat(amount),
       responsible,
@@ -114,7 +113,7 @@ function ExpenseList() {
             <span>{expense.date}</span>
             <span>R$ {expense.amount.toFixed(2)}</span>
             <span>({expense.responsible})</span>
-            <button onClick={() => deleteExpense(expense.id)} className="delete-btn">X</button>
+            <button onClick={() => deleteExpense(String(expense.id))} className="delete-btn">X</button>
           </li>
         ))}
       </ul>
