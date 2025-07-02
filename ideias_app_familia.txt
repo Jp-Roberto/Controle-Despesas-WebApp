@@ -1,0 +1,72 @@
+# Plano de Desenvolvimento: Aplicativo de Gestão Financeira Familiar
+
+## 1. Objetivo Principal
+Criar uma ferramenta simples e intuitiva para que membros de uma família possam registrar e acompanhar despesas feitas em um cartão de crédito compartilhado, sabendo claramente quem é responsável por cada compra e qual o valor total a ser pago por cada um ao final do ciclo da fatura.
+
+## 2. Funcionalidades Essenciais (MVP - Produto Mínimo Viável)
+Esta é a versão mais básica do app que já resolve o problema principal.
+
+*   **Cadastro de Usuários e Grupo Familiar:**
+    *   Um usuário "administrador" (quem cria o grupo) pode convidar outros membros para o grupo da família.
+    *   Login simples por e-mail e senha.
+
+*   **Lançamento de Despesas:**
+    *   Qualquer membro do grupo pode adicionar uma nova despesa.
+    *   Campos para a despesa:
+        *   Descrição (ex: "Almoço no restaurante", "Assinatura Netflix")
+        *   Valor (R$)
+        *   Data da compra
+        *   Membro responsável pela despesa (selecionar em uma lista de membros do grupo).
+
+*   **Dashboard Principal:**
+    *   Uma tela inicial que mostra de forma clara:
+        *   O valor total da fatura atual (soma de todas as despesas).
+        *   Quanto cada membro da família deve pagar até o momento. (ex: "Pai: R$ 350,00", "Mãe: R$ 200,00", "Filho: R$ 150,00").
+
+*   **Ciclo/Fatura:**
+    *   O administrador pode "fechar" um ciclo (mês/fatura).
+    *   Ao fechar, o app arquiva as despesas daquele período e zera o dashboard para o próximo ciclo começar.
+
+## 3. Funcionalidades Adicionais (Para futuras versões)
+
+*   **Notificações:**
+    *   Lembretes automáticos quando a data de fechamento da fatura estiver próxima.
+    *   Aviso quando uma nova despesa de valor alto for lançada.
+
+*   **Categorias de Despesas:**
+    *   Permitir categorizar os gastos (Alimentação, Transporte, Lazer, etc.) para gerar gráficos e relatórios.
+
+*   **Divisão de Despesas:**
+    *   Permitir dividir uma única despesa entre vários membros da família (ex: uma conta de R$100 de um jantar dividida por 2 pessoas).
+
+*   **Anexar Comprovantes:**
+    *   Permitir tirar uma foto da nota fiscal ou do comprovante e anexar ao lançamento da despesa.
+
+*   **Histórico e Relatórios:**
+    *   Visualizar faturas passadas.
+    *   Gerar relatórios simples de gastos por pessoa ou por categoria.
+
+## 4. Sugestão de Tecnologias (Pilha Técnica)
+
+*   **Aplicativo (Frontend):**
+    *   **Flutter** ou **React Native**: Para criar um app que funcione tanto em Android quanto em iOS com um único código. É a abordagem mais eficiente.
+    *   **Alternativa Web:** Um site simples e responsivo (que funciona bem no celular) feito com **React** ou **Vue.js**.
+
+*   **Servidor (Backend):**
+    *   **Firebase (da Google):** É uma excelente opção para começar. Ele oferece banco de dados em tempo real (Firestore), autenticação de usuários e hospedagem, tudo em uma só plataforma, o que acelera muito o desenvolvimento.
+    *   **Node.js (com Express)** ou **Python (com FastAPI/Django):** Opções mais tradicionais e robustas para criar a API que conecta o app ao banco de dados.
+
+*   **Banco de Dados:**
+    *   **Firestore (NoSQL)** ou **PostgreSQL (SQL)**.
+
+**Recomendação para começar rápido:** Use **Flutter** para o app e **Firebase** para toda a parte de backend e banco de dados.
+
+## 5. Próximos Passos (Desenvolvimento)
+
+1.  **Design da Interface (UI/UX):** Desenhar as telas principais do aplicativo. Como será a tela de login? A tela de adicionar despesa? O dashboard? Pode ser feito em papel ou em ferramentas como o Figma.
+2.  **Configurar o Ambiente:** Instalar as ferramentas necessárias (Flutter, VS Code, etc.) e criar o projeto no Firebase.
+3.  **Desenvolver a Autenticação:** Criar as telas de login, cadastro e a lógica para gerenciar os usuários.
+4.  **Desenvolver o "Core":** Implementar a funcionalidade de adicionar e listar as despesas, conectando o app ao banco de dados do Firebase.
+5.  **Criar o Dashboard:** Desenvolver a tela principal que calcula e exibe o total devido por cada membro.
+6.  **Testar:** Convidar a família para testar o app, encontrar bugs e sugerir melhorias.
+7.  **Publicar:** Gerar as versões finais e publicar nas lojas de aplicativos (Google Play Store e Apple App Store).
