@@ -6,6 +6,7 @@ import { useAuth } from './contexts/AuthContext';
 import { useFamily } from './contexts/FamilyContext';
 import AuthForms from './components/AuthForms';
 import FamilyGroupManager from './components/FamilyGroupManager';
+import AdminPanel from './components/AdminPanel';
 
 // --- Componentes Filhos ---
 
@@ -126,6 +127,7 @@ function ExpenseList() {
 function App() {
   const { currentUser, logout } = useAuth();
   const { familyGroup, loadingFamily } = useFamily();
+  const [showAdminPanel, setShowAdminPanel] = React.useState(false);
 
   if (!currentUser) {
     return (
@@ -166,12 +168,27 @@ function App() {
     <div className="App">
       <header className="App-header">
         <h1>Controle de Despesas Familiares</h1>
-        {currentUser && <button onClick={logout} className="logout-btn">Sair</button>}
+        {currentUser && (
+          <div className="header-buttons">
+            <button onClick={logout} className="logout-btn">Sair</button>
+            {currentUser.isAdmin && (
+              <button onClick={() => setShowAdminPanel(!showAdminPanel)} className="admin-panel-toggle-btn">
+                {showAdminPanel ? 'Voltar para Despesas' : 'Painel Admin'}
+              </button>
+            )}
+          </div>
+        )}
       </header>
       <main>
-        <TotalsDashboard />
-        <ExpenseForm />
-        <ExpenseList />
+        {showAdminPanel && currentUser.isAdmin ? (
+          <AdminPanel />
+        ) : (
+          <>
+            <TotalsDashboard />
+            <ExpenseForm />
+            <ExpenseList />
+          </>
+        )}
       </main>
     </div>
   );

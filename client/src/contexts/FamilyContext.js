@@ -9,7 +9,8 @@ import {
   arrayUnion,
   query,
   where,
-  onSnapshot
+  onSnapshot,
+  getDocs
 } from 'firebase/firestore';
 import { useAuth } from './AuthContext';
 
@@ -24,6 +25,8 @@ export function FamilyProvider({ children }) {
   const [familyGroup, setFamilyGroup] = useState(null);
   const [familyMembers, setFamilyMembers] = useState([]);
   const [loadingFamily, setLoadingFamily] = useState(true);
+  const [availableGroups, setAvailableGroups] = useState([]);
+  const [loadingGroups, setLoadingGroups] = useState(true);
 
   // Efeito para carregar o grupo familiar do usuário
   useEffect(() => {
@@ -95,6 +98,24 @@ export function FamilyProvider({ children }) {
     };
   }, [familyGroup]); // Este useEffect depende de familyGroup
 
+  // Efeito para carregar todos os grupos familiares disponíveis
+  useEffect(() => {
+    const q = query(collection(db, 'familyGroups'));
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      const groupsData = snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      }));
+      setAvailableGroups(groupsData);
+      setLoadingGroups(false);
+    }, (error) => {
+      console.error("Error fetching available groups:", error);
+      setLoadingGroups(false);
+    });
+
+    return () => unsubscribe();
+  }, []);
+
   
 
   const createFamilyGroup = async (groupName) => {
@@ -136,12 +157,58 @@ export function FamilyProvider({ children }) {
     }, { merge: true });
   };
 
+  const addMemberToFamilyGroup = async (groupId, memberEmail) => {
+    if (!currentUser || !currentUser.isAdmin) throw new Error('Apenas administradores podem adicionar membros.');
+
+    const groupRef = doc(db, 'familyGroups', groupId);
+    const groupSnap = await getDoc(groupRef);
+
+    if (!groupSnap.exists()) {
+      throw new Error('Grupo familiar não encontrado.');
+    }
+
+    // Verifica se o usuário logado é o admin do grupo
+    if (groupSnap.data().adminId !== currentUser.uid) {
+      throw new Error('Você não é o administrador deste grupo.');
+    }
+
+    // Busca o UID do membro pelo email
+    const usersQuery = query(collection(db, 'users'), where('email', '==', memberEmail));
+    const usersSnapshot = await getDocs(usersQuery);
+
+    if (usersSnapshot.empty) {
+      throw new Error('Usuário com este e-mail não encontrado.');
+    }
+
+    const memberUid = usersSnapshot.docs[0].id;
+
+    // Verifica se o membro já está no grupo
+    if (groupSnap.data().members.includes(memberUid)) {
+      throw new Error('Este membro já faz parte do grupo.');
+    }
+
+    // Adiciona o membro ao array de membros do grupo
+    await updateDoc(groupRef, {
+      members: arrayUnion(memberUid),
+    });
+
+    // Atualiza o documento do membro para incluir o familyGroupId
+    await setDoc(doc(db, 'users', memberUid), {
+      familyGroupId: groupId,
+    }, { merge: true });
+
+    return memberUid;
+  };
+
   const value = {
     familyGroup,
     familyMembers,
     loadingFamily,
+    availableGroups,
+    loadingGroups,
     createFamilyGroup,
     joinFamilyGroup,
+    addMemberToFamilyGroup,
   };
 
   return (

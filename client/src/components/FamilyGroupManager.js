@@ -2,9 +2,10 @@ import React, { useState } from 'react';
 import { useFamily } from '../contexts/FamilyContext';
 
 function FamilyGroupManager() {
-  const { createFamilyGroup, joinFamilyGroup, loadingFamily } = useFamily();
+  const { createFamilyGroup, joinFamilyGroup, loadingFamily, availableGroups, loadingGroups } = useFamily();
   const [groupName, setGroupName] = useState('');
   const [groupId, setGroupId] = useState('');
+  const [selectedGroupId, setSelectedGroupId] = useState('');
   const [error, setError] = useState('');
   const [message, setMessage] = useState('');
 
@@ -21,20 +22,22 @@ function FamilyGroupManager() {
     }
   };
 
-  const handleJoinGroup = async (e) => {
+  const handleJoinGroup = async (e, idToJoin = null) => {
     e.preventDefault();
     setError('');
     setMessage('');
+    const finalGroupId = idToJoin || groupId; // Usa idToJoin se fornecido, senão usa groupId do estado
     try {
-      await joinFamilyGroup(groupId);
+      await joinFamilyGroup(finalGroupId);
       setMessage('Você entrou no grupo com sucesso!');
       setGroupId('');
+      setSelectedGroupId(''); // Limpa o grupo selecionado após entrar
     } catch (err) {
       setError('Erro ao entrar no grupo: ' + err.message);
     }
   };
 
-  if (loadingFamily) {
+  if (loadingFamily || loadingGroups) {
     return <div className="family-manager-container">Carregando informações da família...</div>;
   }
 
@@ -66,10 +69,31 @@ function FamilyGroupManager() {
             placeholder="ID do Grupo Familiar"
             value={groupId}
             onChange={(e) => setGroupId(e.target.value)}
-            required
           />
-          <button type="submit">Entrar no Grupo</button>
+          <button type="submit">Entrar no Grupo por ID</button>
         </form>
+        
+        {availableGroups.length > 0 && (
+          <div className="available-groups-list">
+            <h4>Ou selecione um grupo existente:</h4>
+            <ul>
+              {availableGroups.map(group => (
+                <li key={group.id} onClick={() => setSelectedGroupId(group.id)}
+                    className={selectedGroupId === group.id ? 'selected-group-item' : ''}>
+                  {group.name} (ID: {group.id})
+                </li>
+              ))}
+            </ul>
+            {selectedGroupId && (
+              <button onClick={() => handleJoinGroup({ preventDefault: () => {} }, selectedGroupId)}>
+                Entrar no Grupo Selecionado
+              </button>
+            )}
+          </div>
+        )}
+        {availableGroups.length === 0 && !loadingGroups && (
+          <p>Nenhum grupo disponível para entrar. Crie um novo!</p>
+        )}
       </div>
     </div>
   );
