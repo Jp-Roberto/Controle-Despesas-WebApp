@@ -12,7 +12,7 @@ import AdminPanel from './components/AdminPanel';
 
 function ExpenseForm() {
   const { addExpense } = useExpenses();
-  const { familyMembers } = useFamily();
+  const { familyMembers = [] } = useFamily();
   const [description, setDescription] = React.useState('');
   const [amount, setAmount] = React.useState('');
   const [responsible, setResponsible] = React.useState('');
@@ -56,7 +56,7 @@ function ExpenseForm() {
         <option value="">Selecione o Responsável</option>
         {familyMembers.map(member => (
           <option key={member.uid} value={member.email}>
-            {member.email} {/* Ou member.name se você adicionar um campo de nome */}
+            {member.name || member.email}
           </option>
         ))}
       </select>
@@ -70,9 +70,16 @@ function ExpenseForm() {
 
 function TotalsDashboard() {
   const { expenses, closeBill } = useExpenses();
+  const { familyMembers = [] } = useFamily();
+
+  const memberNameMap = familyMembers.reduce((map, member) => {
+    map[member.email] = member.name || member.email;
+    return map;
+  }, {});
 
   const totals = expenses.reduce((acc, expense) => {
-    acc[expense.responsible] = (acc[expense.responsible] || 0) + expense.amount;
+    const responsibleName = memberNameMap[expense.responsible] || expense.responsible;
+    acc[responsibleName] = (acc[responsibleName] || 0) + expense.amount;
     return acc;
   }, {});
 
@@ -103,6 +110,12 @@ function TotalsDashboard() {
 
 function ExpenseList() {
   const { expenses, deleteExpense } = useExpenses();
+  const { familyMembers = [] } = useFamily();
+
+  const memberNameMap = familyMembers.reduce((map, member) => {
+    map[member.email] = member.name || member.email;
+    return map;
+  }, {});
 
   return (
     <div className="expense-list">
@@ -113,7 +126,7 @@ function ExpenseList() {
             <span>{expense.description}</span>
             <span>{expense.date}</span>
             <span>R$ {expense.amount.toFixed(2)}</span>
-            <span>({expense.responsible})</span>
+            <span>({memberNameMap[expense.responsible] || expense.responsible})</span>
             <button onClick={() => deleteExpense(String(expense.id))} className="delete-btn">X</button>
           </li>
         ))}

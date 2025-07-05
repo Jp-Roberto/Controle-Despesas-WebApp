@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { useFamily } from '../contexts/FamilyContext';
+import styles from './AdminPanel.module.css';
 
 function AdminPanel() {
   const { currentUser } = useAuth();
-  const { familyGroup, addMemberToFamilyGroup } = useFamily();
+  const { familyGroup, familyMembers, addMemberToFamilyGroup } = useFamily();
   const [memberEmail, setMemberEmail] = useState('');
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
@@ -38,7 +39,7 @@ function AdminPanel() {
   }
 
   return (
-    <div className="admin-panel-container">
+    <div className={styles['admin-panel-container']}>
       <h2>Painel de Administração do Grupo</h2>
       {familyGroup ? (
         <p>Gerenciando membros para o grupo: <strong>{familyGroup.name}</strong> (ID: {familyGroup.id})</p>
@@ -46,10 +47,10 @@ function AdminPanel() {
         <p>Você não está em um grupo familiar ativo. Crie ou entre em um para gerenciar membros.</p>
       )}
 
-      {error && <p className="error-message">{error}</p>}
-      {message && <p className="success-message">{message}</p>}
+      {error && <p className={styles['error-message']}>{error}</p>}
+      {message && <p className={styles['success-message']}>{message}</p>}
 
-      <form onSubmit={handleAddMember} className="add-member-form">
+      <form onSubmit={handleAddMember} className={styles['add-member-form']}>
         <h3>Adicionar Novo Membro por E-mail</h3>
         <input
           type="email"
@@ -61,12 +62,12 @@ function AdminPanel() {
         <button type="submit" disabled={!familyGroup}>Adicionar Membro</button>
       </form>
 
-      {familyGroup && familyGroup.members && (
-        <div className="current-members">
+      {familyGroup && familyMembers && familyMembers.length > 0 && (
+        <div className={styles['current-members']}>
           <h3>Membros Atuais do Grupo:</h3>
           <ul>
-            {familyGroup.members.map(memberUid => (
-              <li key={memberUid}>{memberUid}</li> // Exibir UIDs por enquanto, pode ser melhorado para emails/nomes
+            {familyMembers.map(member => (
+              <li key={member.uid}>{member.name || member.email}</li> // Exibir nome ou email se nome não existir
             ))}
           </ul>
         </div>

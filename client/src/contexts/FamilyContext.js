@@ -25,6 +25,7 @@ export function FamilyProvider({ children }) {
   const [familyGroup, setFamilyGroup] = useState(null);
   const [familyMembers, setFamilyMembers] = useState([]);
   const [loadingFamily, setLoadingFamily] = useState(true);
+  const [loadingMembers, setLoadingMembers] = useState(true); // Novo estado de carregamento para membros
   const [availableGroups, setAvailableGroups] = useState([]);
   const [loadingGroups, setLoadingGroups] = useState(true);
 
@@ -75,21 +76,30 @@ export function FamilyProvider({ children }) {
   // Efeito para carregar os membros do grupo familiar E o próprio grupo em tempo real
   useEffect(() => {
     let unsubscribeMembers = () => {};
+    setLoadingMembers(true); // Inicia o carregamento dos membros
 
     if (familyGroup && typeof familyGroup.id === 'string' && familyGroup.id.length > 0) {
       // Listener para os membros da família
       const q = query(collection(db, 'users'), where('familyGroupId', '==', familyGroup.id));
       unsubscribeMembers = onSnapshot(q, (snapshot) => {
-        if (!familyGroup || !familyGroup.id) return; // Defesa extra
+        if (!familyGroup || !familyGroup.id) {
+          setLoadingMembers(false); // Define como false mesmo se não houver grupo
+          return;
+        }
         const members = snapshot.docs.map(doc => ({
           uid: doc.id,
           ...doc.data()
         }));
         setFamilyMembers(members);
+        setLoadingMembers(false); // Finaliza o carregamento dos membros
+      }, (error) => {
+        console.error("Error fetching family members:", error);
+        setLoadingMembers(false); // Finaliza o carregamento em caso de erro
       });
 
     } else {
       setFamilyMembers([]);
+      setLoadingMembers(false); // Finaliza o carregamento se não houver familyGroup
     }
 
     // Função de limpeza para este useEffect
@@ -204,6 +214,7 @@ export function FamilyProvider({ children }) {
     familyGroup,
     familyMembers,
     loadingFamily,
+    loadingMembers, // Adiciona loadingMembers ao valor do contexto
     availableGroups,
     loadingGroups,
     createFamilyGroup,

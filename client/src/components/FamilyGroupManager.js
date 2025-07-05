@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useFamily } from '../contexts/FamilyContext';
+import styles from './FamilyGroupManager.module.css';
 
 function FamilyGroupManager() {
   const { createFamilyGroup, joinFamilyGroup, loadingFamily, availableGroups, loadingGroups } = useFamily();
@@ -38,18 +39,18 @@ function FamilyGroupManager() {
   };
 
   if (loadingFamily || loadingGroups) {
-    return <div className="family-manager-container">Carregando informações da família...</div>;
+    return <div className={styles['family-manager-container']}>Carregando informações da família...</div>;
   }
 
   return (
-    <div className="family-manager-container">
+    <div className={styles['family-manager-container']}>
       <h2>Gerenciar Grupo Familiar</h2>
-      {error && <p className="error-message">{error}</p>}
-      {message && <p className="success-message">{message}</p>}
+      {error && <p className={styles['error-message']}>{error}</p>}
+      {message && <p className={styles['success-message']}>{message}</p>}
 
-      <div className="family-form-section">
+      <div className={styles['family-form-section']}>
         <h3>Criar Novo Grupo</h3>
-        <form onSubmit={handleCreateGroup} className="family-form">
+        <form onSubmit={handleCreateGroup} className={styles['family-form']}>
           <input
             type="text"
             placeholder="Nome do Grupo Familiar"
@@ -61,9 +62,9 @@ function FamilyGroupManager() {
         </form>
       </div>
 
-      <div className="family-form-section">
+      <div className={styles['family-form-section']}>
         <h3>Entrar em Grupo Existente</h3>
-        <form onSubmit={handleJoinGroup} className="family-form">
+        <form onSubmit={handleJoinGroup} className={styles['family-form']}>
           <input
             type="text"
             placeholder="ID do Grupo Familiar"
@@ -74,12 +75,12 @@ function FamilyGroupManager() {
         </form>
         
         {availableGroups.length > 0 && (
-          <div className="available-groups-list">
+          <div className={styles['available-groups-list']}>
             <h4>Ou selecione um grupo existente:</h4>
             <ul>
               {availableGroups.map(group => (
                 <li key={group.id} onClick={() => setSelectedGroupId(group.id)}
-                    className={selectedGroupId === group.id ? 'selected-group-item' : ''}>
+                    className={selectedGroupId === group.id ? styles['selected-group-item'] : ''}>
                   {group.name} (ID: {group.id})
                 </li>
               ))}

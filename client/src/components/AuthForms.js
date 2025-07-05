@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
+import styles from './AuthForms.module.css';
 
 function AuthForms() {
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [isLogin, setIsLogin] = useState(true); // true for login, false for signup
+  const [isLogin, setIsLogin] = useState(true);
   const [error, setError] = useState('');
   const { signup, login } = useAuth();
 
@@ -15,7 +17,7 @@ function AuthForms() {
       if (isLogin) {
         await login(email, password);
       } else {
-        await signup(email, password);
+        await signup(email, password, name);
       }
     } catch (err) {
       setError('Falha na autenticação: ' + err.message);
@@ -23,10 +25,19 @@ function AuthForms() {
   };
 
   return (
-    <div className="auth-container">
+    <div className={styles['auth-container']}>
       <h2>{isLogin ? 'Login' : 'Cadastro'}</h2>
-      {error && <p className="error-message">{error}</p>}
-      <form onSubmit={handleSubmit} className="auth-form">
+      {error && <p className={styles['error-message']}>{error}</p>}
+      <form onSubmit={handleSubmit} className={styles['auth-form']}>
+        {!isLogin && (
+          <input
+            type="text"
+            placeholder="Nome"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            required
+          />
+        )}
         <input
           type="email"
           placeholder="E-mail"
@@ -43,7 +54,7 @@ function AuthForms() {
         />
         <button type="submit">{isLogin ? 'Entrar' : 'Cadastrar'}</button>
       </form>
-      <p onClick={() => setIsLogin(!isLogin)} className="toggle-auth">
+      <p onClick={() => setIsLogin(!isLogin)} className={styles['toggle-auth']}>
         {isLogin ? 'Não tem uma conta? Cadastre-se' : 'Já tem uma conta? Faça login'}
       </p>
     </div>

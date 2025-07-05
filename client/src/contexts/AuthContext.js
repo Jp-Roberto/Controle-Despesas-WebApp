@@ -18,10 +18,11 @@ export function AuthProvider({ children }) {
   const [currentUser, setCurrentUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  async function signup(email, password) {
+  async function signup(email, password, name) {
     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
     const user = userCredential.user;
     await setDoc(doc(db, "users", user.uid), {
+      name: name, // Adiciona o nome aqui
       email: user.email,
       createdAt: new Date(),
     });
@@ -40,18 +41,23 @@ export function AuthProvider({ children }) {
     const unsubscribe = onAuthStateChanged(auth, async user => {
       if (user) {
         const userDocRef = doc(db, "users", user.uid);
-        // Garante que o documento do usuário exista no Firestore e adiciona o email
-        await setDoc(userDocRef, {
-          email: user.email,
-        }, { merge: true });
-
-        // Busca o documento do usuário para obter o campo isAdmin
         const userDocSnap = await getDoc(userDocRef);
-        if (userDocSnap.exists()) {
-          setCurrentUser({ ...user, ...userDocSnap.data() });
-        } else {
-          setCurrentUser(user);
+        let userData = userDocSnap.exists() ? userDocSnap.data() : {};
+
+        // Garante que o campo 'name' exista no documento do usuário no Firestore
+        if (!userData.name) {
+          await setDoc(userDocRef, { name: '' }, { merge: true });
+          userData.name = ''; // Atualiza o objeto local para refletir a mudança
         }
+
+        // Garante que o email também esteja presente (para usuários antigos ou se o email mudar)
+        if (!userData.email) {
+          await setDoc(userDocRef, { email: user.email }, { merge: true });
+          userData.email = user.email; // Atualiza o objeto local
+        }
+
+        setCurrentUser({ ...user, ...userData });
+
       } else {
         setCurrentUser(null);
       }

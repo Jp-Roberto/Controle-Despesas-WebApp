@@ -1,0 +1,40 @@
+.family-manager-container {
+  padding: 2rem;
+}
+
+.family-form-section {
+  margin-top: 2rem;
+}
+
+.family-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  max-width: 400px;
+}
+
+.error-message {
+  color: #d9534f;
+}
+
+.success-message {
+  color: #5cb85c;
+}
+
+.available-groups-list ul {
+  list-style: none;
+  padding: 0;
+}
+
+.available-groups-list li {
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-bottom: 0.5rem;
+  cursor: pointer;
+}
+
+.selected-group-item {
+  background-color: #e7f3ff;
+  border-color: #007bff;
+}
