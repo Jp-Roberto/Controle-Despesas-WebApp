@@ -94,7 +94,8 @@ export function ExpenseProvider({ children }) {
     if (!currentUser || !familyGroup) return;
 
     if (expenses.length === 0) {
-      alert('Não há despesas para fechar.');
+      // Não há despesas para fechar. Opcional: mostrar uma mensagem de erro para o usuário
+      return;
       return;
     }
 
@@ -106,10 +107,10 @@ export function ExpenseProvider({ children }) {
 
     try {
       await batch.commit();
-      alert('Fatura fechada! O painel foi limpo para o próximo ciclo.');
+      // Opcional: mostrar uma mensagem de sucesso para o usuário
     } catch (error) {
       console.error('Error closing bill:', error);
-      alert('Erro ao fechar fatura: ' + error.message);
+      // Opcional: mostrar uma mensagem de erro para o usuário
     }
   };
 
