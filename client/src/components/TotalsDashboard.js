@@ -1,27 +1,18 @@
 import React, { useState } from 'react';
 import { useExpenses } from '../contexts/ExpenseContext';
-import { useFamily } from '../contexts/FamilyContext';
 import { useTheme } from '../contexts/ThemeContext'; // Importar useTheme
 import Modal from './Modal';
 import CategoryChart from './CategoryChart';
 
 function TotalsDashboard() {
   const { expenses, closeBill } = useExpenses();
-  const { familyMembers = [] } = useFamily();
   const { textColorPrimary, textColorSecondary } = useTheme(); // Obter cores do tema
   const [isLoading, setIsLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const memberNameMap = familyMembers.reduce((map, member) => {
-    map[member.email] = member.name || member.email;
-    return map;
-  }, {});
+  
 
-  const totals = expenses.reduce((acc, expense) => {
-    const responsibleName = memberNameMap[expense.responsible] || expense.responsible;
-    acc[responsibleName] = (acc[responsibleName] || 0) + expense.amount;
-    return acc;
-  }, {});
+  
 
   const totalAmount = expenses.reduce((sum, expense) => sum + expense.amount, 0);
 

@@ -18,9 +18,9 @@ import Modal from './components/Modal';
 // --- Componente Principal ---
 
 function App() {
-  const { currentUser, logout } = useAuth();
+  const { currentUser } = useAuth();
   const { familyGroup, loadingFamily } = useFamily();
-  const { theme, toggleTheme } = useTheme();
+  useTheme();
 
   // Novo estado para controlar a visualização principal: 'dashboard', 'family', 'admin'
   const [currentMainScreen, setCurrentMainScreen] = useState('dashboard');
