@@ -7,6 +7,7 @@ import {
   signOut,
   onAuthStateChanged
 } from 'firebase/auth';
+import { notifySuccess, notifyError } from '../utils/notifications';
 
 const AuthContext = createContext();
 
@@ -19,22 +20,38 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true);
 
   async function signup(email, password, name) {
-    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-    const user = userCredential.user;
-    await setDoc(doc(db, "users", user.uid), {
-      name: name, // Adiciona o nome aqui
-      email: user.email,
-      createdAt: new Date(),
-    });
-    return userCredential;
+    try {
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+      await setDoc(doc(db, "users", user.uid), {
+        name: name, // Adiciona o nome aqui
+        email: user.email,
+        createdAt: new Date(),
+      });
+      notifySuccess("Cadastro realizado com sucesso!");
+      return userCredential;
+    } catch (error) {
+      notifyError("Erro no cadastro: " + error.message);
+      throw error;
+    }
   }
 
   function login(email, password) {
-    return signInWithEmailAndPassword(auth, email, password);
+    try {
+      return signInWithEmailAndPassword(auth, email, password);
+    } catch (error) {
+      notifyError("Erro no login: " + error.message);
+      throw error;
+    }
   }
 
   function logout() {
-    return signOut(auth);
+    try {
+      return signOut(auth);
+    } catch (error) {
+      notifyError("Erro ao sair: " + error.message);
+      throw error;
+    }
   }
 
   useEffect(() => {

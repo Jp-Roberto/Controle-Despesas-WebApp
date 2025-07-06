@@ -13,6 +13,7 @@ import {
   getDocs
 } from 'firebase/firestore';
 import { useAuth } from './AuthContext';
+import { notifySuccess, notifyError, notifyInfo } from '../utils/notifications';
 
 const FamilyContext = createContext();
 
@@ -129,30 +130,42 @@ export function FamilyProvider({ children }) {
   
 
   const createFamilyGroup = async (groupName) => {
-    if (!currentUser) throw new Error('Usuário não autenticado.');
+    if (!currentUser) {
+      notifyError('Usuário não autenticado.');
+      throw new Error('Usuário não autenticado.');
+    }
+    try {
+      const newGroupRef = doc(collection(db, 'familyGroups'));
+      await setDoc(newGroupRef, {
+        name: groupName,
+        adminId: currentUser.uid,
+        members: [currentUser.uid],
+      });
 
-    const newGroupRef = doc(collection(db, 'familyGroups'));
-    await setDoc(newGroupRef, {
-      name: groupName,
-      adminId: currentUser.uid,
-      members: [currentUser.uid],
-    });
+      // Atualizar o documento do usuário para incluir o familyGroupId
+      await setDoc(doc(db, 'users', currentUser.uid), {
+        familyGroupId: newGroupRef.id,
+      }, { merge: true });
 
-    // Atualizar o documento do usuário para incluir o familyGroupId
-    await setDoc(doc(db, 'users', currentUser.uid), {
-      familyGroupId: newGroupRef.id,
-    }, { merge: true });
-
-    return newGroupRef.id;
+      notifySuccess(`Grupo "${groupName}" criado com sucesso! ID: ${newGroupRef.id}`);
+      return newGroupRef.id;
+    } catch (error) {
+      notifyError("Erro ao criar grupo: " + error.message);
+      throw error;
+    }
   };
 
   const joinFamilyGroup = async (groupId) => {
-    if (!currentUser) throw new Error('Usuário não autenticado.');
+    if (!currentUser) {
+      notifyError('Usuário não autenticado.');
+      throw new Error('Usuário não autenticado.');
+    }
 
     const groupRef = doc(db, 'familyGroups', groupId);
     const groupSnap = await getDoc(groupRef);
 
     if (!groupSnap.exists()) {
+      notifyError('Grupo familiar não encontrado.');
       throw new Error('Grupo familiar não encontrado.');
     }
 
@@ -165,20 +178,26 @@ export function FamilyProvider({ children }) {
     await setDoc(doc(db, 'users', currentUser.uid), {
       familyGroupId: groupId,
     }, { merge: true });
+    notifySuccess("Você entrou no grupo com sucesso!");
   };
 
   const addMemberToFamilyGroup = async (groupId, memberEmail) => {
-    if (!currentUser || !currentUser.isAdmin) throw new Error('Apenas administradores podem adicionar membros.');
+    if (!currentUser || !currentUser.isAdmin) {
+      notifyError('Apenas administradores podem adicionar membros.');
+      throw new Error('Apenas administradores podem adicionar membros.');
+    }
 
     const groupRef = doc(db, 'familyGroups', groupId);
     const groupSnap = await getDoc(groupRef);
 
     if (!groupSnap.exists()) {
+      notifyError('Grupo familiar não encontrado.');
       throw new Error('Grupo familiar não encontrado.');
     }
 
     // Verifica se o usuário logado é o admin do grupo
     if (groupSnap.data().adminId !== currentUser.uid) {
+      notifyError('Você não é o administrador deste grupo.');
       throw new Error('Você não é o administrador deste grupo.');
     }
 
@@ -187,6 +206,7 @@ export function FamilyProvider({ children }) {
     const usersSnapshot = await getDocs(usersQuery);
 
     if (usersSnapshot.empty) {
+      notifyError('Usuário com este e-mail não encontrado.');
       throw new Error('Usuário com este e-mail não encontrado.');
     }
 
@@ -194,6 +214,7 @@ export function FamilyProvider({ children }) {
 
     // Verifica se o membro já está no grupo
     if (groupSnap.data().members.includes(memberUid)) {
+      notifyInfo('Este membro já faz parte do grupo.');
       throw new Error('Este membro já faz parte do grupo.');
     }
 
@@ -207,6 +228,7 @@ export function FamilyProvider({ children }) {
       familyGroupId: groupId,
     }, { merge: true });
 
+    notifySuccess(`Membro ${memberEmail} adicionado com sucesso!`);
     return memberUid;
   };
 

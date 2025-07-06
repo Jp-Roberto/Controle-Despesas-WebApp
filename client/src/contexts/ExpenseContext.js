@@ -14,6 +14,7 @@ import {
 } from 'firebase/firestore';
 import { useAuth } from './AuthContext';
 import { useFamily } from './FamilyContext';
+import { notifySuccess, notifyError, notifyInfo } from '../utils/notifications';
 
 const ExpenseContext = createContext();
 
@@ -72,30 +73,40 @@ export function ExpenseProvider({ children }) {
 
   const addExpense = async (expense) => {
     if (!currentUser || !familyGroup) return;
-    await addDoc(collection(db, 'expenses'), {
-      ...expense,
-      userId: currentUser.uid,
-      familyGroupId: familyGroup.id,
-      archived: false,
-      timestamp: serverTimestamp(),
-    });
+    try {
+      await addDoc(collection(db, 'expenses'), {
+        ...expense,
+        userId: currentUser.uid,
+        familyGroupId: familyGroup.id,
+        archived: false,
+        timestamp: serverTimestamp(),
+      });
+      notifySuccess("Despesa adicionada com sucesso!");
+    } catch (error) {
+      notifyError("Erro ao adicionar despesa: " + error.message);
+      console.error("Erro ao adicionar despesa:", error);
+    }
   };
 
   const deleteExpense = async (id) => {
     if (!currentUser || !familyGroup) return;
     try {
       await deleteDoc(doc(db, 'expenses', id));
+      notifySuccess("Despesa excluída com sucesso!");
     } catch (error) {
+      notifyError("Erro ao excluir despesa: " + error.message);
       console.error('Error deleting expense:', error);
     }
+  };
+
+  }
   };
 
   const closeBill = async () => {
     if (!currentUser || !familyGroup) return;
 
     if (expenses.length === 0) {
-      // Não há despesas para fechar. Opcional: mostrar uma mensagem de erro para o usuário
-      return;
+      notifyInfo("Não há despesas para fechar.");
       return;
     }
 
@@ -107,10 +118,10 @@ export function ExpenseProvider({ children }) {
 
     try {
       await batch.commit();
-      // Opcional: mostrar uma mensagem de sucesso para o usuário
+      notifySuccess("Fatura fechada! O painel foi limpo para o próximo ciclo.");
     } catch (error) {
+      notifyError("Erro ao fechar fatura: " + error.message);
       console.error('Error closing bill:', error);
-      // Opcional: mostrar uma mensagem de erro para o usuário
     }
   };
 

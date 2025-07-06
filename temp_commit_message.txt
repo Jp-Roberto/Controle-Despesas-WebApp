@@ -1,0 +1,7 @@
+feat: Refatora componentes, adiciona modais de confirmação e loading.
+
+- Move os componentes ExpenseForm, TotalsDashboard e ExpenseList para arquivos separados em `src/components/`.
+- Implementa um componente `Modal` reutilizável para confirmações.
+- Adiciona modais de confirmação para exclusão de despesas e fechamento de fatura.
+- Inclui indicadores de loading nos botões de adicionar despesa e fechar fatura.
+- Remove `alert()` nativos do `ExpenseContext` para um tratamento de erro mais profissional.

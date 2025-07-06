@@ -13,10 +13,10 @@
 }
 
 .modal {
-  background: white;
+  background: var(--surface-color);
   padding: 25px 30px;
   border-radius: 12px;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  box-shadow: var(--box-shadow);
   width: 90%;
   max-width: 450px;
   text-align: center;
@@ -25,15 +25,14 @@
 .modal h2 {
   margin-top: 0;
   margin-bottom: 15px;
-  color: #2C3E50; /* var(--dark-color) */
-  font-size: 1.6em;
+  color: var(--text-color-primary);
 }
 
 .content {
   margin-bottom: 25px;
   font-size: 1.1em;
   line-height: 1.5;
-  color: #34495E;
+  color: var(--text-color-secondary);
 }
 
 .actions {
@@ -53,20 +52,20 @@
 }
 
 .cancelButton {
-  background-color: #ECF0F1; /* var(--light-gray) */
-  color: #2C3E50; /* var(--dark-color) */
+  background-color: var(--border-color);
+  color: var(--text-color-primary);
 }
 
 .cancelButton:hover {
-  background-color: #BDC3C7; /* var(--medium-gray) */
+  background-color: var(--border-color);
 }
 
 .confirmButton {
-  background-color: #E74C3C; /* var(--red-error) */
+  background-color: var(--error-color);
   color: white;
 }
 
 .confirmButton:hover {
-  background-color: #C0392B;
+  background-color: #A52A2A;
   transform: translateY(-2px);
 }

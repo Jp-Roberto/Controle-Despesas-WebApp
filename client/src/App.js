@@ -1,8 +1,11 @@
 
 import React from 'react';
 import './App.css';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { useAuth } from './contexts/AuthContext';
 import { useFamily } from './contexts/FamilyContext';
+import { useTheme } from './contexts/ThemeContext';
 import AuthForms from './components/AuthForms';
 import FamilyGroupManager from './components/FamilyGroupManager';
 import AdminPanel from './components/AdminPanel';
@@ -15,6 +18,7 @@ import ExpenseList from './components/ExpenseList';
 function App() {
   const { currentUser, logout } = useAuth();
   const { familyGroup, loadingFamily } = useFamily();
+  const { theme, toggleTheme } = useTheme();
   const [showAdminPanel, setShowAdminPanel] = React.useState(false);
 
   if (!currentUser) {
@@ -59,6 +63,9 @@ function App() {
         {currentUser && (
           <div className="header-buttons">
             <button onClick={logout} className="logout-btn">Sair</button>
+            <button onClick={toggleTheme} className="theme-toggle-btn">
+              {theme === 'light' ? 'Modo Escuro' : 'Modo Claro'}
+            </button>
             {currentUser.isAdmin && (
               <button onClick={() => setShowAdminPanel(!showAdminPanel)} className="admin-panel-toggle-btn">
                 {showAdminPanel ? 'Voltar para Despesas' : 'Painel Admin'}
@@ -78,6 +85,7 @@ function App() {
           </>
         )}
       </main>
+      <ToastContainer position="bottom-right" autoClose={5000} hideProgressBar={false} newestOnTop={false} closeOnClick rtl={false} pauseOnFocusLoss draggable pauseOnHover />
     </div>
   );
 }

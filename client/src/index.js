@@ -6,17 +6,20 @@ import reportWebVitals from './reportWebVitals';
 import { ExpenseProvider } from './contexts/ExpenseContext';
 import { AuthProvider } from './contexts/AuthContext';
 import { FamilyProvider } from './contexts/FamilyContext';
+import { ThemeProvider } from './contexts/ThemeContext';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <AuthProvider>
-      <FamilyProvider>
-        <ExpenseProvider>
-          <App />
-        </ExpenseProvider>
-      </FamilyProvider>
-    </AuthProvider>
+    <ThemeProvider>
+      <AuthProvider>
+        <FamilyProvider>
+          <ExpenseProvider>
+            <App />
+          </ExpenseProvider>
+        </FamilyProvider>
+      </AuthProvider>
+    </ThemeProvider>
   </React.StrictMode>
 );
 

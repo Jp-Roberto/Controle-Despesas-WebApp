@@ -4,6 +4,10 @@
 
 .family-form-section {
   margin-top: 2rem;
+  background: var(--surface-color);
+  padding: 30px;
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
 }
 
 .family-form {
@@ -14,11 +18,11 @@
 }
 
 .error-message {
-  color: #d9534f;
+  color: var(--error-color);
 }
 
 .success-message {
-  color: #5cb85c;
+  color: var(--success-color);
 }
 
 .available-groups-list ul {
@@ -28,13 +32,13 @@
 
 .available-groups-list li {
   padding: 0.5rem;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
   margin-bottom: 0.5rem;
   cursor: pointer;
 }
 
 .selected-group-item {
-  background-color: #e7f3ff;
-  border-color: #007bff;
+  background-color: var(--background-color);
+  border-color: var(--primary-accent);
 }
