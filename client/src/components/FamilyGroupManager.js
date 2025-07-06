@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { useFamily } from '../contexts/FamilyContext';
+import { useAuth } from '../contexts/AuthContext'; // Importar useAuth para verificar se é admin
 import styles from './FamilyGroupManager.module.css';
 
 function FamilyGroupManager() {
-  const { createFamilyGroup, joinFamilyGroup, loadingFamily, availableGroups, loadingGroups } = useFamily();
+  const { createFamilyGroup, joinFamilyGroup, loadingFamily, availableGroups, loadingGroups, sendJoinRequest } = useFamily();
+  const { currentUser } = useAuth(); // Obter o usuário atual para verificar se é admin
   const [groupName, setGroupName] = useState('');
   const [groupId, setGroupId] = useState('');
   const [selectedGroupId, setSelectedGroupId] = useState('');
@@ -28,13 +30,19 @@ function FamilyGroupManager() {
     setError('');
     setMessage('');
     const finalGroupId = idToJoin || groupId; // Usa idToJoin se fornecido, senão usa groupId do estado
+
     try {
-      await joinFamilyGroup(finalGroupId);
-      setMessage('Você entrou no grupo com sucesso!');
+      if (currentUser && currentUser.isAdmin) {
+        await joinFamilyGroup(finalGroupId);
+        setMessage('Você entrou no grupo com sucesso!');
+      } else {
+        await sendJoinRequest(finalGroupId);
+        setMessage('Solicitação de entrada enviada com sucesso!');
+      }
       setGroupId('');
       setSelectedGroupId(''); // Limpa o grupo selecionado após entrar
     } catch (err) {
-      setError('Erro ao entrar no grupo: ' + err.message);
+      setError('Erro: ' + err.message);
     }
   };
 
@@ -48,19 +56,21 @@ function FamilyGroupManager() {
       {error && <p className={styles['error-message']}>{error}</p>}
       {message && <p className={styles['success-message']}>{message}</p>}
 
-      <div className={styles['family-form-section']}>
-        <h3>Criar Novo Grupo</h3>
-        <form onSubmit={handleCreateGroup} className={styles['family-form']}>
-          <input
-            type="text"
-            placeholder="Nome do Grupo Familiar"
-            value={groupName}
-            onChange={(e) => setGroupName(e.target.value)}
-            required
-          />
-          <button type="submit">Criar Grupo</button>
-        </form>
-      </div>
+      {currentUser && currentUser.isAdmin && (
+        <div className={styles['family-form-section']}>
+          <h3>Criar Novo Grupo</h3>
+          <form onSubmit={handleCreateGroup} className={styles['family-form']}>
+            <input
+              type="text"
+              placeholder="Nome do Grupo Familiar"
+              value={groupName}
+              onChange={(e) => setGroupName(e.target.value)}
+              required
+            />
+            <button type="submit">Criar Grupo</button>
+          </form>
+        </div>
+      )}
 
       <div className={styles['family-form-section']}>
         <h3>Entrar em Grupo Existente</h3>
@@ -71,7 +81,7 @@ function FamilyGroupManager() {
             value={groupId}
             onChange={(e) => setGroupId(e.target.value)}
           />
-          <button type="submit">Entrar no Grupo por ID</button>
+          <button type="submit">{currentUser && currentUser.isAdmin ? 'Entrar no Grupo por ID' : 'Enviar Solicitação por ID'}</button>
         </form>
         
         {availableGroups.length > 0 && (
@@ -87,7 +97,7 @@ function FamilyGroupManager() {
             </ul>
             {selectedGroupId && (
               <button onClick={() => handleJoinGroup({ preventDefault: () => {} }, selectedGroupId)}>
-                Entrar no Grupo Selecionado
+                {currentUser && currentUser.isAdmin ? 'Entrar no Grupo Selecionado' : 'Enviar Solicitação para Grupo Selecionado'}
               </button>
             )}
           </div>

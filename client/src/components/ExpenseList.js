@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useExpenses } from '../contexts/ExpenseContext';
 import { useFamily } from '../contexts/FamilyContext';
@@ -44,6 +43,7 @@ function ExpenseList() {
             <li key={expense.id}>
               <span>{expense.description}</span>
               <span>{expense.date}</span>
+              <span>{expense.category}</span> {/* Exibir a categoria */}
               <span>R$ {expense.amount.toFixed(2)}</span>
               <span>({memberNameMap[expense.responsible] || expense.responsible})</span>
               <button onClick={() => handleDeleteClick(String(expense.id))} className="delete-btn">X</button>

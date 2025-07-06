@@ -44,40 +44,72 @@ body {
   min-height: 100vh;
 }
 
-.App-header {
-  background-color: var(--primary-accent);
-  padding: 25px 20px;
-  color: var(--surface-color);
-  margin-bottom: 40px;
-  box-shadow: var(--box-shadow);
+
+
+
+
+/* Estilos para a nova navegação principal */
+.main-nav {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  justify-content: space-between; /* Alinha os itens nas extremidades */
+  background-color: var(--surface-color);
+  padding: 15px 20px;
+  box-shadow: var(--box-shadow);
+  margin-bottom: 20px;
+  gap: 15px;
+  flex-wrap: wrap;
 }
 
-.App-header h1 {
-  margin: 0;
-  font-size: 2.5em;
-  font-weight: 700;
+.main-nav-buttons-group {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
 }
 
-main {
-  max-width: 1200px;
-  margin: 0 auto 40px auto; /* Adiciona margem inferior */
-  padding: 0 25px;
+.main-nav-button {
+  padding: 12px 25px;
+  border: none;
+  border-radius: 8px;
+  background-color: transparent;
+  color: var(--text-color-primary);
+  font-size: 1.1em;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.main-nav-button:hover {
+  background-color: var(--background-color);
+  color: var(--primary-accent);
+}
+
+.main-nav-button.active {
+  background-color: var(--primary-accent);
+  color: var(--surface-color);
+}
+
+.main-nav-button.active:hover {
+  background-color: var(--secondary-accent);
+}
+
+/* Ajuste para o container principal de conteúdo */
+.dashboard-grid-container {
   display: grid;
+  grid-template-columns: 1fr 1fr; /* Two columns, equal width */
   grid-template-areas:
-    'dashboard form'
-    'list list';
-  grid-template-columns: 1fr 1fr;
-  gap: 30px; /* Espaçamento entre as colunas */
-  flex-grow: 1; /* Permite que o main ocupe o espaço restante */
+    "dashboard form"
+    "list list";
+  gap: 20px; /* Space between grid items */
+  padding: 20px;
+  max-width: 1200px; /* Max width for the grid */
+  margin: 0 auto; /* Center the grid */
 }
 
 /* Estilos para Cards e Seções */
 .expense-form,
 .totals-dashboard,
-.expense-list {
+.expense-list,
+.category-chart-section {
   background: var(--surface-color);
   padding: 30px;
   border-radius: var(--border-radius);
@@ -305,24 +337,67 @@ main {
   transform: translateY(-2px);
 }
 
+/* Estilos para a navegação por abas */
+.tab-navigation {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+  gap: 10px; /* Espaçamento entre os botões */
+}
+
+.tab-button {
+  padding: 10px 20px;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  background-color: var(--surface-color);
+  color: var(--text-color-primary);
+  font-size: 1em;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+}
+
+.tab-button:hover {
+  background-color: var(--background-color);
+  border-color: var(--primary-accent);
+}
+
+.tab-button.active {
+  background-color: var(--primary-accent);
+  color: var(--surface-color);
+  border-color: var(--primary-accent);
+  font-weight: 600;
+}
+
+.tab-button.active:hover {
+  background-color: var(--secondary-accent);
+  border-color: var(--secondary-accent);
+}
+
 /* Responsividade */
 @media (max-width: 768px) {
-  main {
-    grid-template-areas:
-      'dashboard'
-      'form'
-      'list';
-    grid-template-columns: 1fr;
-    padding: 0 15px;
+  .main-nav {
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
   }
 
-  .App-header h1 {
-    font-size: 2em;
+  .main-nav-buttons-group {
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+  }
+
+  .main-nav-button,
+  .headerMenu .menuButton {
+    width: 100%;
+    text-align: center;
   }
 
   .expense-form,
   .totals-dashboard,
-  .expense-list {
+  .expense-list,
+  .category-chart-section {
     padding: 20px;
   }
 
@@ -367,15 +442,25 @@ main {
     width: 100%;
     margin-top: 10px;
   }
-}
 
-.error-message {
-  color: var(--error-color);
-  font-size: 0.85em;
-  margin-top: -10px;
-  margin-bottom: 10px;
-  text-align: left;
-  font-weight: 500;
+  .tab-navigation {
+    flex-direction: column; /* Empilha os botões em telas pequenas */
+    align-items: stretch; /* Estica os botões para preencher a largura */
+    padding: 0 15px; /* Adiciona padding para não colar nas bordas */
+  }
+
+  .tab-button {
+    width: 100%; /* Ocupa a largura total */
+    margin-bottom: 10px; /* Espaçamento entre os botões empilhados */
+  }
+
+  .dashboard-grid-container {
+    grid-template-columns: 1fr; /* Uma única coluna */
+    grid-template-areas:
+      "dashboard"
+      "form"
+      "list";
+  }
 }
 
 /* Estilos para Autenticação */
@@ -386,6 +471,16 @@ main {
   justify-content: center;
   flex-grow: 1;
   padding: 20px;
+}
+
+.centered-content-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  flex-grow: 1;
+  padding: 20px;
+  width: 100%; /* Garante que o wrapper ocupe a largura total disponível */
 }
 
 .auth-container h2 {
@@ -451,22 +546,7 @@ main {
   text-decoration: underline;
 }
 
-.logout-btn {
-  background-color: var(--error-color);
-  border: none;
-  color: var(--surface-color);
-  padding: 8px 15px;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 0.9em;
-  font-weight: 600;
-  transition: background-color 0.3s ease, transform 0.2s ease;
-}
 
-.logout-btn:hover {
-  background-color: #B71C1C;
-  transform: translateY(-1px);
-}
 
 /* Estilos para FamilyGroupManager */
 .family-manager-container {

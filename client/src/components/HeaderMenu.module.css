@@ -1,0 +1,21 @@
+.headerMenu {
+  display: flex;
+  gap: 10px;
+}
+
+.menuButton {
+  padding: 12px 25px;
+  border: none;
+  border-radius: 8px;
+  background-color: transparent;
+  color: var(--text-color-primary);
+  font-size: 1.1em;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.menuButton:hover {
+  background-color: var(--background-color);
+  color: var(--primary-accent);
+}

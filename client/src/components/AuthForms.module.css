@@ -6,6 +6,21 @@
   border: 1px solid var(--border-color);
   border-radius: var(--border-radius);
   box-shadow: var(--box-shadow);
+  box-sizing: border-box; /* Garante que o padding seja incluído na largura total */
+}
+
+@media (max-width: 768px) {
+  .auth-container {
+    padding: 1.5rem;
+    margin: 1.5rem auto;
+  }
+}
+
+@media (max-width: 480px) {
+  .auth-container {
+    padding: 1rem;
+    margin: 1rem auto;
+  }
 }
 
 .auth-form {

@@ -1,12 +1,14 @@
-
 import React, { useState } from 'react';
 import { useExpenses } from '../contexts/ExpenseContext';
 import { useFamily } from '../contexts/FamilyContext';
-import Modal from './Modal'; // Importando o modal
+import { useTheme } from '../contexts/ThemeContext'; // Importar useTheme
+import Modal from './Modal';
+import CategoryChart from './CategoryChart';
 
 function TotalsDashboard() {
   const { expenses, closeBill } = useExpenses();
   const { familyMembers = [] } = useFamily();
+  const { textColorPrimary, textColorSecondary } = useTheme(); // Obter cores do tema
   const [isLoading, setIsLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -22,6 +24,16 @@ function TotalsDashboard() {
   }, {});
 
   const totalAmount = expenses.reduce((sum, expense) => sum + expense.amount, 0);
+
+  const categoryTotals = expenses.reduce((acc, expense) => {
+    acc[expense.category] = (acc[expense.category] || 0) + expense.amount;
+    return acc;
+  }, {});
+
+  const chartData = Object.entries(categoryTotals).map(([name, value]) => ({
+    name,
+    value,
+  }));
 
   const handleConfirmCloseBill = async () => {
     setIsLoading(true);
@@ -48,15 +60,16 @@ function TotalsDashboard() {
           <h3>Total Geral</h3>
           <p>R$ {totalAmount.toFixed(2)}</p>
         </div>
-        <h3>Divisão por Pessoa</h3>
-        <div className="totals-by-person">
-          {Object.entries(totals).map(([person, total]) => (
-            <div key={person} className="person-total">
-              <p>{person}:</p>
-              <p>R$ {total.toFixed(2)}</p>
-            </div>
-          ))}
-        </div>
+
+        {chartData.length > 0 && (
+          <div className="category-chart-section">
+            <CategoryChart
+              data={chartData}
+              textColorPrimary={textColorPrimary} // Passar cor primária
+              textColorSecondary={textColorSecondary} // Passar cor secundária
+            />
+          </div>
+        )}
       </div>
 
       <Modal

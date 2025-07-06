@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
 const ThemeContext = createContext();
@@ -9,16 +8,27 @@ export function useTheme() {
 
 export function ThemeProvider({ children }) {
   const [theme, setTheme] = useState(() => {
-    // Tenta carregar o tema do localStorage, ou usa 'light' como padrão
     const savedTheme = localStorage.getItem('theme');
     return savedTheme || 'light';
   });
 
+  const [currentTextColors, setCurrentTextColors] = useState({
+    primary: '#333333', // Default light mode primary
+    secondary: '#666666', // Default light mode secondary
+  });
+
   useEffect(() => {
-    // Aplica a classe 'dark-mode' ao body quando o tema muda
     document.body.className = theme === 'dark' ? 'dark-mode' : '';
-    // Salva a preferência do tema no localStorage
     localStorage.setItem('theme', theme);
+
+    // Atualiza as cores de texto com base no tema ativo
+    const rootStyles = getComputedStyle(document.documentElement);
+    const primaryColor = rootStyles.getPropertyValue('--text-color-primary').trim();
+    const secondaryColor = rootStyles.getPropertyValue('--text-color-secondary').trim();
+    setCurrentTextColors({
+      primary: primaryColor,
+      secondary: secondaryColor,
+    });
   }, [theme]);
 
   const toggleTheme = () => {
@@ -28,6 +38,8 @@ export function ThemeProvider({ children }) {
   const value = {
     theme,
     toggleTheme,
+    textColorPrimary: currentTextColors.primary,
+    textColorSecondary: currentTextColors.secondary,
   };
 
   return (

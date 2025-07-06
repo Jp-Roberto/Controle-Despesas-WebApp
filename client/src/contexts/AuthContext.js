@@ -73,6 +73,12 @@ export function AuthProvider({ children }) {
           userData.email = user.email; // Atualiza o objeto local
         }
 
+        // Garante que o campo 'isAdmin' exista no documento do usuário no Firestore
+        if (typeof userData.isAdmin === 'undefined') {
+          await setDoc(userDocRef, { isAdmin: false }, { merge: true }); // Define como false por padrão se não existir
+          userData.isAdmin = false; // Atualiza o objeto local
+        }
+
         setCurrentUser({ ...user, ...userData });
 
       } else {

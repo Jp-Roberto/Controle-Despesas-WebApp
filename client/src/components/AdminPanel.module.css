@@ -1,21 +1,202 @@
 .admin-panel-container {
-  padding: 2rem;
+  padding: 20px;
+  max-width: 800px;
   background-color: var(--surface-color);
   border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-sizing: border-box;
 }
 
-.add-member-form {
-  margin-top: 1.5rem;
+@media (max-width: 768px) {
+  .admin-panel-container {
+    padding: 15px;
+    margin: 10px auto;
+  }
+}
+
+@media (max-width: 480px) {
+  .admin-panel-container {
+    padding: 10px;
+    margin: 5px auto;
+  }
+}
+
+.admin-panel-container h2 {
+  color: var(--text-color-primary);
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.admin-panel-container p {
+  text-align: center;
+  margin-bottom: 15px;
+  color: var(--text-color-secondary);
 }
 
 .error-message {
   color: var(--error-color);
+  background-color: #f2dede; /* Manter este para contraste */
+  border: 1px solid #ebccd1; /* Manter este para contraste */
+  padding: 10px;
+  border-radius: 4px;
+  margin-bottom: 15px;
+  text-align: center;
 }
 
 .success-message {
   color: var(--success-color);
+  background-color: #dff0d8; /* Manter este para contraste */
+  border: 1px solid #d6e9c6; /* Manter este para contraste */
+  padding: 10px;
+  border-radius: 4px;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+.add-member-form {
+  background-color: var(--surface-color);
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  margin-bottom: 20px;
+}
+
+.add-member-form h3 {
+  color: var(--text-color-primary);
+  margin-bottom: 15px;
+}
+
+.add-member-form input[type="email"] {
+  width: calc(100% - 22px);
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+.add-member-form button[type="submit"] {
+  background-color: var(--primary-accent);
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  width: 100%;
+}
+
+.add-member-form button[type="submit"]:hover:not(:disabled) {
+  background-color: var(--secondary-accent);
+}
+
+.add-member-form button[type="submit"]:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
 }
 
 .current-members {
-  margin-top: 2rem;
+  background-color: var(--surface-color);
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  margin-bottom: 20px; /* Adicionado para espaçamento */
+}
+
+.current-members h3 {
+  color: var(--text-color-primary);
+  margin-bottom: 15px;
+}
+
+.current-members ul {
+  list-style: none;
+  padding: 0;
+}
+
+.current-members li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.current-members li:last-child {
+  border-bottom: none;
+}
+
+.remove-button {
+  background-color: var(--error-color);
+  color: white;
+  padding: 5px 10px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.remove-button:hover {
+  background-color: #B71C1C; /* Um tom mais escuro para o hover do erro */
+}
+
+.pending-requests {
+  background-color: var(--surface-color);
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.pending-requests h3 {
+  color: var(--text-color-primary);
+  margin-bottom: 15px;
+}
+
+.pending-requests ul {
+  list-style: none;
+  padding: 0;
+}
+
+.pending-requests li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.pending-requests li:last-child {
+  border-bottom: none;
+}
+
+.request-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.accept-button {
+  background-color: var(--success-color);
+  color: white;
+  padding: 5px 10px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.accept-button:hover {
+  background-color: #45a049; /* Um tom mais escuro para o hover do sucesso */
+}
+
+.reject-button {
+  background-color: var(--error-color);
+  color: white;
+  padding: 5px 10px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.reject-button:hover {
+  background-color: #B71C1C; /* Um tom mais escuro para o hover do erro */
 }

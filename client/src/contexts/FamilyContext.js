@@ -10,7 +10,9 @@ import {
   query,
   where,
   onSnapshot,
-  getDocs
+  getDocs,
+  addDoc, // Adicionado para enviar solicitações
+  serverTimestamp // Adicionado para timestamp
 } from 'firebase/firestore';
 import { useAuth } from './AuthContext';
 import { notifySuccess, notifyError, notifyInfo } from '../utils/notifications';
@@ -29,6 +31,7 @@ export function FamilyProvider({ children }) {
   const [loadingMembers, setLoadingMembers] = useState(true); // Novo estado de carregamento para membros
   const [availableGroups, setAvailableGroups] = useState([]);
   const [loadingGroups, setLoadingGroups] = useState(true);
+  const [pendingJoinRequests, setPendingJoinRequests] = useState([]); // Novo estado para solicitações pendentes
 
   // Efeito para carregar o grupo familiar do usuário
   useEffect(() => {
@@ -127,7 +130,27 @@ export function FamilyProvider({ children }) {
     return () => unsubscribe();
   }, []);
 
-  
+  // Efeito para carregar solicitações de entrada pendentes para o admin
+  useEffect(() => {
+    let unsubscribeRequests = () => {};
+    if (currentUser && currentUser.isAdmin && familyGroup) {
+      const q = query(
+        collection(db, 'joinRequests'),
+        where('groupId', '==', familyGroup.id),
+        where('status', '==', 'pending')
+      );
+      unsubscribeRequests = onSnapshot(q, (snapshot) => {
+        const requests = snapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data()
+        }));
+        setPendingJoinRequests(requests);
+      }, (error) => {
+        console.error("Error fetching pending join requests:", error);
+      });
+    }
+    return () => unsubscribeRequests();
+  }, [currentUser, familyGroup]);
 
   const createFamilyGroup = async (groupName) => {
     if (!currentUser) {
@@ -155,10 +178,66 @@ export function FamilyProvider({ children }) {
     }
   };
 
+  const sendJoinRequest = async (groupId) => {
+    if (!currentUser) {
+      notifyError('Usuário não autenticado.');
+      throw new Error('Usuário não autenticado.');
+    }
+
+    try {
+      const groupRef = doc(db, 'familyGroups', groupId);
+      const groupSnap = await getDoc(groupRef);
+
+      if (!groupSnap.exists()) {
+        notifyError('Grupo familiar não encontrado.');
+        throw new Error('Grupo familiar não encontrado.');
+      }
+
+      // Verifica se o usuário já está no grupo
+      if (groupSnap.data().members.includes(currentUser.uid)) {
+        notifyInfo('Você já faz parte deste grupo.');
+        throw new Error('Você já faz parte deste grupo.');
+      }
+
+      // Verifica se já existe uma solicitação pendente do usuário para este grupo
+      const existingRequestsQuery = query(
+        collection(db, 'joinRequests'),
+        where('groupId', '==', groupId),
+        where('requesterUid', '==', currentUser.uid),
+        where('status', '==', 'pending')
+      );
+      const existingRequestsSnap = await getDocs(existingRequestsQuery);
+
+      if (!existingRequestsSnap.empty) {
+        notifyInfo('Você já tem uma solicitação pendente para este grupo.');
+        throw new Error('Você já tem uma solicitação pendente para este grupo.');
+      }
+
+      await addDoc(collection(db, 'joinRequests'), {
+        groupId: groupId,
+        groupName: groupSnap.data().name, // Salva o nome do grupo para facilitar a exibição
+        requesterUid: currentUser.uid,
+        requesterEmail: currentUser.email, // Salva o email do solicitante
+        status: 'pending',
+        timestamp: serverTimestamp(),
+      });
+      notifySuccess('Solicitação de entrada enviada com sucesso!');
+    } catch (error) {
+      notifyError("Erro ao enviar solicitação: " + error.message);
+      throw error;
+    }
+  };
+
   const joinFamilyGroup = async (groupId) => {
     if (!currentUser) {
       notifyError('Usuário não autenticado.');
       throw new Error('Usuário não autenticado.');
+    }
+
+    // Se o usuário não for admin, ele deve enviar uma solicitação
+    if (!currentUser.isAdmin) {
+      await sendJoinRequest(groupId);
+      return;
     }
 
     const groupRef = doc(db, 'familyGroups', groupId);
@@ -232,6 +311,104 @@ export function FamilyProvider({ children }) {
     return memberUid;
   };
 
+  const removeMemberFromFamilyGroup = async (memberUidToRemove) => {
+    if (!currentUser || !currentUser.isAdmin) {
+      notifyError('Apenas administradores podem remover membros.');
+      throw new Error('Apenas administradores podem remover membros.');
+    }
+
+    if (!familyGroup || !familyGroup.id) {
+      notifyError('Você não está em um grupo familiar ativo.');
+      throw new Error('Você não está em um grupo familiar ativo.');
+    }
+
+    const groupRef = doc(db, 'familyGroups', familyGroup.id);
+    const groupSnap = await getDoc(groupRef);
+
+    if (!groupSnap.exists()) {
+      notifyError('Grupo familiar não encontrado.');
+      throw new Error('Grupo familiar não encontrado.');
+    }
+
+    // Verifica se o usuário logado é o admin do grupo
+    if (groupSnap.data().adminId !== currentUser.uid) {
+      notifyError('Você não é o administrador deste grupo.');
+      throw new Error('Você não é o administrador deste grupo.');
+    }
+
+    // Verifica se o membro a ser removido é o próprio admin
+    if (memberUidToRemove === currentUser.uid) {
+      notifyError('Você não pode remover a si mesmo do grupo.');
+      throw new Error('Você não pode remover a si mesmo do grupo.');
+    }
+
+    // Remove o membro do array de membros do grupo
+    const updatedMembers = groupSnap.data().members.filter(uid => uid !== memberUidToRemove);
+    await updateDoc(groupRef, {
+      members: updatedMembers,
+    });
+
+    // Atualiza o documento do membro removido para limpar o familyGroupId
+    await setDoc(doc(db, 'users', memberUidToRemove), {
+      familyGroupId: '', // Limpa o familyGroupId do usuário
+    }, { merge: true });
+
+    notifySuccess('Membro removido com sucesso!');
+  };
+
+  const acceptJoinRequest = async (requestId, requesterUid, groupId) => {
+    if (!currentUser || !currentUser.isAdmin) {
+      notifyError('Apenas administradores podem aceitar solicitações.');
+      throw new Error('Apenas administradores podem aceitar solicitações.');
+    }
+
+    try {
+      // 1. Adicionar o usuário ao grupo familiar
+      const groupRef = doc(db, 'familyGroups', groupId);
+      await updateDoc(groupRef, {
+        members: arrayUnion(requesterUid),
+      });
+
+      // 2. Atualizar o familyGroupId do usuário solicitante
+      await setDoc(doc(db, 'users', requesterUid), {
+        familyGroupId: groupId,
+      }, { merge: true });
+
+      // 3. Atualizar o status da solicitação para 'accepted'
+      await updateDoc(doc(db, 'joinRequests', requestId), {
+        status: 'accepted',
+        processedAt: serverTimestamp(),
+        processedBy: currentUser.uid,
+      });
+
+      notifySuccess('Solicitação aceita com sucesso!');
+    } catch (error) {
+      notifyError("Erro ao aceitar solicitação: " + error.message);
+      throw error;
+    }
+  };
+
+  const rejectJoinRequest = async (requestId) => {
+    if (!currentUser || !currentUser.isAdmin) {
+      notifyError('Apenas administradores podem recusar solicitações.');
+      throw new Error('Apenas administradores podem recusar solicitações.');
+    }
+
+    try {
+      // Atualizar o status da solicitação para 'rejected'
+      await updateDoc(doc(db, 'joinRequests', requestId), {
+        status: 'rejected',
+        processedAt: serverTimestamp(),
+        processedBy: currentUser.uid,
+      });
+
+      notifyInfo('Solicitação recusada.');
+    } catch (error) {
+      notifyError("Erro ao recusar solicitação: " + error.message);
+      throw error;
+    }
+  };
+
   const value = {
     familyGroup,
     familyMembers,
@@ -239,9 +416,14 @@ export function FamilyProvider({ children }) {
     loadingMembers, // Adiciona loadingMembers ao valor do contexto
     availableGroups,
     loadingGroups,
+    pendingJoinRequests, // Adiciona solicitações pendentes ao contexto
     createFamilyGroup,
     joinFamilyGroup,
     addMemberToFamilyGroup,
+    removeMemberFromFamilyGroup,
+    sendJoinRequest, // Adiciona a nova função ao contexto
+    acceptJoinRequest, // Adiciona a nova função ao contexto
+    rejectJoinRequest, // Adiciona a nova função ao contexto
   };
 
   return (

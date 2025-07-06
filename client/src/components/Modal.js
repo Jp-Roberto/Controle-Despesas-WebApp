@@ -16,11 +16,13 @@ function Modal({ isOpen, onClose, onConfirm, title, children }) {
         </div>
         <div className={styles.actions}>
           <button onClick={onClose} className={styles.cancelButton}>
-            Cancelar
+            {onConfirm ? 'Cancelar' : 'Fechar'}
           </button>
-          <button onClick={onConfirm} className={styles.confirmButton}>
-            Confirmar
-          </button>
+          {onConfirm && (
+            <button onClick={onConfirm} className={styles.confirmButton}>
+              Confirmar
+            </button>
+          )}
         </div>
       </div>
     </div>
