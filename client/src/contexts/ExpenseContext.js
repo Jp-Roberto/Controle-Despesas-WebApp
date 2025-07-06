@@ -99,8 +99,6 @@ export function ExpenseProvider({ children }) {
     }
   };
 
-  };
-
   const closeBill = async () => {
     if (!currentUser || !familyGroup) return;
 
