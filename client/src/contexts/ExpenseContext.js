@@ -99,7 +99,6 @@ export function ExpenseProvider({ children }) {
     }
   };
 
-  }
   };
 
   const closeBill = async () => {
