@@ -154,7 +154,6 @@ Os arquivos otimizados ficarão na pasta `build/`.
 5. Abra um Pull Request explicando suas mudanças
 
 ## 📸 Exemplos visuais
-> Adicione aqui prints de tela do app rodando (exemplo abaixo):
 
 ![Tela de login](https://user-images.githubusercontent.com/0000000/000000000-00000000-0000-0000-0000-000000000000.png)
 ![Dashboard](https://user-images.githubusercontent.com/0000000/000000000-00000000-0000-0000-0000-000000000000.png)
