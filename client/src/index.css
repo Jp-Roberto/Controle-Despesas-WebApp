@@ -5,9 +5,164 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  
+  /* Melhorias para mobile */
+  -webkit-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
+  overflow-x: hidden;
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+/* Melhorias globais para responsividade */
+* {
+  box-sizing: border-box;
+}
+
+/* Melhor suporte para touch em dispositivos móveis */
+button, input, select, textarea {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Previne zoom indesejado em inputs no iOS */
+@media screen and (max-width: 480px) {
+  input[type="text"],
+  input[type="email"],
+  input[type="password"],
+  input[type="number"],
+  input[type="date"],
+  select,
+  textarea {
+    font-size: 16px !important;
+  }
+}
+
+/* Melhorias para acessibilidade */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Suporte para modo escuro do sistema */
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+  }
+}
+
+/* Melhorias para telas de alta densidade */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  img {
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+  }
+}
+
+/* Scrollbar personalizada para webkit */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--background-color, #f1f1f1);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-color, #c1c1c1);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-color-secondary, #a8a8a8);
+}
+
+/* Melhorias para seleção de texto */
+::selection {
+  background-color: var(--primary-accent, #007BFF);
+  color: white;
+}
+
+::-moz-selection {
+  background-color: var(--primary-accent, #007BFF);
+  color: white;
+}
+
+/* Previne overflow horizontal em containers */
+.container {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+/* Melhorias para focus visível */
+:focus-visible {
+  outline: 2px solid var(--primary-accent, #007BFF);
+  outline-offset: 2px;
+}
+
+/* Melhorias para elementos interativos */
+.interactive {
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.interactive:hover {
+  transform: translateY(-1px);
+}
+
+.interactive:active {
+  transform: translateY(0);
+}
+
+/* Utilitários para responsividade */
+.hidden-mobile {
+  display: block;
+}
+
+.hidden-desktop {
+  display: none;
+}
+
+@media (max-width: 767px) {
+  .hidden-mobile {
+    display: none;
+  }
+  
+  .hidden-desktop {
+    display: block;
+  }
+}
+
+/* Melhorias para loading states */
+.loading {
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+.loading::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 20px;
+  height: 20px;
+  margin: -10px 0 0 -10px;
+  border: 2px solid var(--border-color, #e0e0e0);
+  border-top: 2px solid var(--primary-accent, #007BFF);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }

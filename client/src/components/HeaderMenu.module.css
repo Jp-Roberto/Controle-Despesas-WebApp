@@ -1,6 +1,8 @@
 .headerMenu {
   display: flex;
   gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
 }
 
 .menuButton {
@@ -13,9 +15,45 @@
   font-weight: 600;
   cursor: pointer;
   transition: background-color 0.3s ease, color 0.3s ease;
+  min-height: 44px;
+  touch-action: manipulation;
+  white-space: nowrap;
 }
 
 .menuButton:hover {
   background-color: var(--background-color);
   color: var(--primary-accent);
+}
+
+@media (max-width: 1024px) {
+  .headerMenu {
+    gap: 8px;
+  }
+  
+  .menuButton {
+    padding: 10px 20px;
+    font-size: 1em;
+  }
+}
+
+@media (max-width: 767px) {
+  .headerMenu {
+    flex-direction: column;
+    width: 100%;
+    gap: 8px;
+  }
+  
+  .menuButton {
+    width: 100%;
+    text-align: center;
+    padding: 12px 20px;
+    font-size: 1em;
+  }
+}
+
+@media (max-width: 480px) {
+  .menuButton {
+    padding: 10px 15px;
+    font-size: 0.9em;
+  }
 }
