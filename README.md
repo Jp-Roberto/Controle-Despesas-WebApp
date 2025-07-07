@@ -1,8 +1,6 @@
 # App Família Despesas
 
-![GitHub repo size](https://img.shields.io/github/repo-size/Jp-Roberto/Controle-Despesas-WebApp)
-![GitHub stars](https://img.shields.io/github/stars/Jp-Roberto/Controle-Despesas-WebApp?style=social)
-![GitHub license](https://img.shields.io/github/license/Jp-Roberto/Controle-Despesas-WebApp)
+
 
 Um aplicativo moderno e fácil de usar para controle de despesas familiares, com visual bonito, responsivo e recursos de administração para grupos.
 
