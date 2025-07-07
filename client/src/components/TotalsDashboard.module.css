@@ -1,0 +1,113 @@
+.totals-dashboard-modern {
+  background: linear-gradient(135deg, #ede9fe 0%, #d1c4e9 100%);
+  border-radius: var(--radius-lg, 24px);
+  box-shadow: 0 6px 32px 0 rgba(124, 58, 237, 0.13);
+  padding: 2.2rem 1.5rem 1.5rem 1.5rem;
+  margin-bottom: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-width: 280px;
+  position: relative;
+  z-index: 1;
+  animation: fadeInCard 0.7s cubic-bezier(.4,0,.2,1);
+}
+
+@keyframes fadeInCard {
+  0% {
+    opacity: 0;
+    transform: translateY(32px) scale(0.98);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.totals-dashboard-header {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1.5rem;
+  margin-bottom: 1.2rem;
+  position: relative;
+  z-index: 2;
+}
+
+.totals-dashboard-icon {
+  background: linear-gradient(135deg, #7c3aed 60%, #a78bfa 100%);
+  border-radius: 50%;
+  width: 64px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 12px 0 rgba(124,58,237,0.13);
+  flex-shrink: 0;
+  margin-bottom: 0;
+  margin-right: 0.5rem;
+}
+
+.totals-dashboard-title {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--color-primary-dark, #4c1d95);
+  margin-bottom: 0.5rem;
+  position: relative;
+  z-index: 2;
+}
+
+.totals-dashboard-balance-label {
+  font-size: 1.35rem;
+  color: var(--color-primary-dark, #4c1d95);
+  margin-bottom: 0.2rem;
+  position: relative;
+  z-index: 2;
+  font-weight: 600;
+}
+
+.totals-dashboard-balance {
+  font-size: 5.5rem;
+  font-weight: 1000;
+  color: var(--color-primary, #7c3aed);
+  margin-bottom: 0.2rem;
+  position: relative;
+  z-index: 2;
+  letter-spacing: -2px;
+}
+
+.totals-dashboard-chart-section {
+  width: 100%;
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  z-index: 1;
+}
+
+@media (max-width: 700px) {
+  .totals-dashboard-modern {
+    padding: 1.2rem 0.5rem 1rem 0.5rem;
+    border-radius: var(--radius-md, 16px);
+  }
+  .totals-dashboard-header {
+    flex-direction: column;
+    align-items: center;
+    gap: 0.7rem;
+  }
+  .totals-dashboard-icon {
+    margin-bottom: 0.7rem;
+    margin-right: 0;
+  }
+  .totals-dashboard-balance {
+    font-size: 3.2rem;
+    font-weight: 1000;
+  }
+  .totals-dashboard-balance-label {
+    font-size: 1.08rem;
+  }
+} 

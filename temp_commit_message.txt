@@ -1,3 +1,0 @@
-fix: Corrige erro de sintaxe em ExpenseContext.js
-
-- Remove chave de fechamento `}` extra que causava 'return' fora da função.

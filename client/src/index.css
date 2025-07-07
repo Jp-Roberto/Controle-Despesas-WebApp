@@ -1,20 +1,44 @@
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+  font-family: 'Poppins', Arial, Helvetica, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background: linear-gradient(135deg, #e9e3ff 0%, #f5f3ff 100%);
+  min-height: 100vh;
   
-  /* Melhorias para mobile */
+  /* Ajustes para mobile */
   -webkit-text-size-adjust: 100%;
   -ms-text-size-adjust: 100%;
   overflow-x: hidden;
 }
 
+html, body {
+  font-family: 'Poppins', Arial, Helvetica, sans-serif;
+}
+
+:root {
+  --color-primary: #7c3aed;
+  --color-primary-dark: #4c1d95;
+  --color-secondary: #a78bfa;
+  --color-accent: #c084fc;
+  --color-bg: #f5f3ff;
+  --color-bg-dark: #1e1b2e;
+  --color-surface: #fff;
+  --color-surface-dark: #23213a;
+  --color-card: #ede9fe;
+  --color-card-dark: #2d2940;
+  --color-text: #23213a;
+  --color-text-light: #fff;
+  --color-text-secondary: #a1a1aa;
+  --color-border: #e0e0e0;
+  --color-shadow: 0 4px 24px 0 rgba(124, 58, 237, 0.08);
+  --radius-lg: 24px;
+  --radius-md: 16px;
+  --radius-sm: 8px;
+}
+
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+  font-family: 'Poppins', source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }
 
 /* Melhorias globais para responsividade */
@@ -22,7 +46,7 @@ code {
   box-sizing: border-box;
 }
 
-/* Melhor suporte para touch em dispositivos móveis */
+/* Suporte aprimorado para toque em dispositivos móveis */
 button, input, select, textarea {
   -webkit-tap-highlight-color: transparent;
 }
@@ -40,7 +64,7 @@ button, input, select, textarea {
   }
 }
 
-/* Melhorias para acessibilidade */
+/* Acessibilidade: reduz animações se o usuário preferir */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -52,14 +76,7 @@ button, input, select, textarea {
   }
 }
 
-/* Suporte para modo escuro do sistema */
-@media (prefers-color-scheme: dark) {
-  :root {
-    color-scheme: dark;
-  }
-}
-
-/* Melhorias para telas de alta densidade */
+/* Ajustes para telas de alta densidade */
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
   img {
     image-rendering: -webkit-optimize-contrast;
@@ -67,7 +84,7 @@ button, input, select, textarea {
   }
 }
 
-/* Scrollbar personalizada para webkit */
+/* Scrollbar personalizada para navegadores Webkit */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
@@ -86,7 +103,7 @@ button, input, select, textarea {
   background: var(--text-color-secondary, #a8a8a8);
 }
 
-/* Melhorias para seleção de texto */
+/* Seleção de texto personalizada */
 ::selection {
   background-color: var(--primary-accent, #007BFF);
   color: white;
@@ -103,13 +120,13 @@ button, input, select, textarea {
   overflow-x: hidden;
 }
 
-/* Melhorias para focus visível */
+/* Destaque para foco visível */
 :focus-visible {
   outline: 2px solid var(--primary-accent, #007BFF);
   outline-offset: 2px;
 }
 
-/* Melhorias para elementos interativos */
+/* Efeito para elementos interativos */
 .interactive {
   cursor: pointer;
   transition: all 0.2s ease;
@@ -142,7 +159,7 @@ button, input, select, textarea {
   }
 }
 
-/* Melhorias para loading states */
+/* Estado de loading */
 .loading {
   opacity: 0.7;
   pointer-events: none;

@@ -2,6 +2,9 @@ import React, { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { useFamily } from '../contexts/FamilyContext';
 import styles from './AdminPanel.module.css';
+import Button from './ui/Button';
+import Avatar from './ui/Avatar';
+import { FiUserPlus, FiTrash2, FiCheck, FiX } from 'react-icons/fi';
 
 function AdminPanel() {
   const { currentUser } = useAuth();
@@ -91,14 +94,19 @@ function AdminPanel() {
 
       <form onSubmit={handleAddMember} className={styles['add-member-form']}>
         <h3>Adicionar Novo Membro por E-mail</h3>
-        <input
-          type="email"
-          placeholder="E-mail do novo membro"
-          value={memberEmail}
-          onChange={(e) => setMemberEmail(e.target.value)}
-          required
-        />
-        <button type="submit" disabled={!familyGroup}>Adicionar Membro</button>
+        <div style={{ display: 'flex', gap: '0.7rem', alignItems: 'center' }}>
+          <input
+            type="email"
+            placeholder="E-mail do novo membro"
+            value={memberEmail}
+            onChange={(e) => setMemberEmail(e.target.value)}
+            required
+            style={{ flex: 1 }}
+          />
+          <Button type="submit" disabled={!familyGroup || !memberEmail} variant="primary" aria-label="Adicionar membro">
+            <FiUserPlus style={{ marginRight: 8 }} /> Adicionar
+          </Button>
+        </div>
       </form>
 
       {familyGroup && familyMembers && familyMembers.length > 0 && (
@@ -106,15 +114,20 @@ function AdminPanel() {
           <h3>Membros Atuais do Grupo:</h3>
           <ul>
             {familyMembers.map(member => (
-              <li key={member.uid}>
-                {member.name || member.email}
+              <li key={member.uid} style={{ gap: 12 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                  <Avatar name={member.name || member.email} size={40} />
+                  <span>{member.name || member.email}</span>
+                </div>
                 {member.uid !== currentUser.uid && (
-                  <button
+                  <Button
                     className={styles['remove-button']}
+                    variant="ghost"
+                    aria-label={`Remover ${member.name || member.email}`}
                     onClick={() => handleRemoveMember(member.uid, member.name || member.email)}
                   >
-                    Remover
-                  </button>
+                    <FiTrash2 style={{ marginRight: 6 }} /> Remover
+                  </Button>
                 )}
               </li>
             ))}
@@ -127,21 +140,28 @@ function AdminPanel() {
           <h3>Solicitações de Entrada Pendentes:</h3>
           <ul>
             {pendingJoinRequests.map(request => (
-              <li key={request.id}>
-                {request.requesterEmail} solicitou entrar em "{request.groupName}"
+              <li key={request.id} style={{ gap: 12 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                  <Avatar name={request.requesterEmail} size={36} />
+                  <span>{request.requesterEmail} solicitou entrar em "{request.groupName}"</span>
+                </div>
                 <div className={styles['request-actions']}>
-                  <button
+                  <Button
                     className={styles['accept-button']}
+                    variant="primary"
+                    aria-label={`Aceitar solicitação de ${request.requesterEmail}`}
                     onClick={() => handleAcceptRequest(request.id, request.requesterUid, request.groupId, request.requesterEmail)}
                   >
-                    Aceitar
-                  </button>
-                  <button
+                    <FiCheck style={{ marginRight: 4 }} /> Aceitar
+                  </Button>
+                  <Button
                     className={styles['reject-button']}
+                    variant="ghost"
+                    aria-label={`Recusar solicitação de ${request.requesterEmail}`}
                     onClick={() => handleRejectRequest(request.id, request.requesterEmail)}
                   >
-                    Recusar
-                  </button>
+                    <FiX style={{ marginRight: 4 }} /> Recusar
+                  </Button>
                 </div>
               </li>
             ))}

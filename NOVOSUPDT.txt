@@ -1,0 +1,43 @@
+Sugestões para deixar o projeto completo:
+
+1. Testes e Qualidade
+- Testes automatizados: unitários, integração, interface (Cypress, Testing Library)
+- Cobertura de testes nos fluxos críticos
+
+2. Validação e UX
+- Validação de formulários e mensagens claras
+- Feedback ao usuário: toasts, loaders, confirmações
+- Acessibilidade: navegação por teclado, contraste, labels
+
+3. Segurança
+- Regras do Firestore revisadas e testadas
+- Proteção de rotas (não acessar telas sem permissão)
+- Sanitização de dados
+
+4. Performance
+- Otimização de imagens/assets
+- Lazy loading de componentes pesados
+- Minificação e build de produção
+
+5. Mobile e Responsividade
+- Testar em vários dispositivos reais
+- Ajustar detalhes de layout (inputs, botões, gráficos)
+
+6. Documentação
+- README completo (como rodar, deploy, estrutura)
+- Comentários claros no código
+- Guia rápido para colaboradores
+
+7. Funcionalidades Extras (opcional)
+- Notificações push ou e-mail
+- Exportar dados (CSV, PDF)
+- Filtros e busca de despesas
+- Dashboard de estatísticas avançado
+- Personalização de categorias
+- Foto/avatar do usuário
+- Histórico de faturas fechadas
+
+8. Publicação
+- Deploy em ambiente real (Vercel, Netlify, Firebase Hosting)
+- Configuração de domínio, HTTPS, favicon, manifest
+- Política de privacidade e termos de uso 

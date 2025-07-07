@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { useFamily } from '../contexts/FamilyContext';
-import { useAuth } from '../contexts/AuthContext'; // Importar useAuth para verificar se é admin
+import { useAuth } from '../contexts/AuthContext'; // Importa useAuth para verificar se é admin
 import styles from './FamilyGroupManager.module.css';
 
 function FamilyGroupManager() {
   const { createFamilyGroup, joinFamilyGroup, loadingFamily, availableGroups, loadingGroups, sendJoinRequest } = useFamily();
-  const { currentUser } = useAuth(); // Obter o usuário atual para verificar se é admin
+  const { currentUser } = useAuth(); // Obtém o usuário atual para verificar se é admin
   const [groupName, setGroupName] = useState('');
   const [groupId, setGroupId] = useState('');
   const [selectedGroupId, setSelectedGroupId] = useState('');

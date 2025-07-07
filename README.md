@@ -1,120 +1,126 @@
-# AppTesteBeta: Gerenciamento de Despesas Familiares
+# App Família Despesas
 
-Este é um aplicativo web para gerenciamento colaborativo de despesas familiares, permitindo que membros de um grupo familiar registrem e acompanhem gastos, visualizem totais e divisões por pessoa, e gerenciem o grupo.
+Um aplicativo moderno e fácil de usar para controle de despesas familiares, com visual bonito, responsivo e recursos de administração para grupos.
 
-## Funcionalidades Principais
+## ✨ O que é este app?
 
--   **Autenticação de Usuários:** Sistema de login e registro para acesso seguro.
--   **Gerenciamento de Grupos Familiares:**
-    -   Criação e junção a grupos familiares.
-    -   Visualização de membros do grupo.
-    -   Painel de administração para gerenciar membros (apenas para administradores).
--   **Registro e Acompanhamento de Despesas:**
-    -   Adição de novas despesas com descrição, valor, categoria e responsável.
-    -   Listagem de despesas registradas.
-    -   Fechamento de fatura para reiniciar o ciclo de despesas.
--   **Dashboards e Relatórios:**
-    -   Visualização de totais de despesas.
-    -   **Divisão por Pessoa:** Acompanhamento dos gastos individuais de cada membro do grupo, acessível via modal no menu superior.
-    -   Gráficos de categorias (se implementado).
--   **Interface de Usuário:**
-    -   Modo claro/escuro (Light/Dark Mode).
-    -   Notificações de sistema (toasts) para feedback ao usuário.
-    -   Modais de confirmação para ações importantes.
+O **App Família Despesas** permite que famílias ou grupos controlem juntos seus gastos, visualizem resumos, gráficos, divisão por pessoa e mantenham tudo organizado de forma colaborativa e segura.
 
-## Tecnologias Utilizadas
+## 🚀 Principais recursos
+- Cadastro e login de usuários
+- Criação e administração de grupos familiares
+- Adição, visualização e exclusão de despesas
+- Resumo da fatura do mês com gráficos
+- Divisão de gastos por pessoa
+- Permissões: admin e usuário comum
+- Visual moderno, responsivo e com dark mode
 
--   **Frontend:** React.js
--   **Estilização:** CSS Modules, CSS puro com variáveis para temas.
--   **Gerenciamento de Estado:** React Context API
--   **Autenticação e Banco de Dados:** Firebase (Firestore, Authentication)
--   **Notificações:** `react-toastify`
+## 🖥️ Pré-requisitos
+- [Node.js](https://nodejs.org/) (recomendado v18+)
+- [npm](https://www.npmjs.com/) ou [yarn](https://yarnpkg.com/)
+- Conta no [Firebase](https://firebase.google.com/) (Firestore)
 
-## Como Rodar o Projeto Localmente
+## ⚙️ Como instalar e rodar
 
-Para configurar e rodar este projeto em sua máquina local, siga os passos abaixo:
+1. **Clone o repositório:**
+   ```bash
+   git clone <URL_DO_REPOSITORIO>
+   cd app-familia-despesas/client
+   ```
 
-1.  **Clone o Repositório:**
-    ```bash
-    git clone <URL_DO_SEU_REPOSITORIO>
-    cd AppTesteBeta/client
-    ```
+2. **Instale as dependências:**
+   ```bash
+   npm install
+   # ou
+   yarn install
+   ```
 
-2.  **Instale as Dependências:**
-    ```bash
-    npm install
-    ```
+3. **Configuração do Firebase:**
+   - Crie um projeto no [Firebase Console](https://console.firebase.google.com/).
+   - Configure a autenticação (Email/Senha) e o Firestore Database.
+   - Crie um arquivo `firebaseConfig.js` dentro de `client/src/` com suas credenciais do Firebase:
 
-3.  **Configuração do Firebase:**
-    -   Crie um projeto no [Firebase Console](https://console.firebase.google.com/).
-    -   Configure a autenticação (Email/Senha) e o Firestore Database.
-    -   Crie um arquivo `firebaseConfig.js` dentro de `client/src/` com suas credenciais do Firebase:
+     ```javascript
+     // client/src/firebaseConfig.js
+     import { initializeApp } from "firebase/app";
+     import { getAuth } from "firebase/auth";
+     import { getFirestore } from "firebase/firestore";
 
-        ```javascript
-        // client/src/firebaseConfig.js
-        import { initializeApp } from "firebase/app";
-        import { getAuth } from "firebase/auth";
-        import { getFirestore } from "firebase/firestore";
+     const firebaseConfig = {
+       apiKey: "SUA_API_KEY",
+       authDomain: "SEU_AUTH_DOMAIN",
+       projectId: "SEU_PROJECT_ID",
+       storageBucket: "SEU_STORAGE_BUCKET",
+       messagingSenderId: "SEU_MESSAGING_SENDER_ID",
+       appId: "SEU_APP_ID"
+     };
 
-        const firebaseConfig = {
-          apiKey: "SUA_API_KEY",
-          authDomain: "SEU_AUTH_DOMAIN",
-          projectId: "SEU_PROJECT_ID",
-          storageBucket: "SEU_STORAGE_BUCKET",
-          messagingSenderId: "SEU_MESSAGING_SENDER_ID",
-          appId: "SEU_APP_ID"
-        };
+     const app = initializeApp(firebaseConfig);
+     const auth = getAuth(app);
+     const db = getFirestore(app);
 
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
+     export { auth, db };
+     ```
 
-        export { auth, db };
-        ```
+4. **Rode o app localmente:**
+   ```bash
+   npm start
+   # ou
+   yarn start
+   ```
+   O app abrirá em `http://localhost:3000`
 
-4.  **Inicie o Servidor de Desenvolvimento:**
-    ```bash
-    npm start
-    ```
+## 👨‍👩‍👧‍👦 Como usar
 
-    O aplicativo será aberto em `http://localhost:3000` no seu navegador padrão.
+1. **Cadastre-se** com seu e-mail e senha.
+2. **Crie um grupo familiar** (se for admin) ou peça para ser adicionado.
+3. **Adicione despesas** facilmente pelo botão "Adicionar".
+4. **Veja o resumo da fatura**, gráficos e divisão por pessoa.
+5. **Admins** podem gerenciar membros, aceitar solicitações e fechar a fatura.
+6. **Usuários comuns** só podem ver/adicionar suas próprias despesas.
 
-## Estrutura do Projeto
+## 🛡️ Segurança
 
+- **Autenticação e Banco de Dados:**
+  - Utiliza Firebase Authentication (e-mail/senha) para login seguro.
+  - Todas as informações são salvas no Firestore, banco de dados em nuvem do Firebase.
+
+- **Regras de Permissão:**
+  - O acesso aos dados é controlado por regras do Firestore, separando claramente o que é permitido para administradores e usuários comuns.
+  - Apenas membros do grupo podem visualizar as despesas do grupo.
+  - Apenas administradores podem adicionar/remover membros, fechar fatura e acessar o painel de administração.
+
+- **Boas Práticas:**
+  - Senhas nunca ficam visíveis nem são salvas no banco de dados.
+  - O frontend esconde menus e botões de admin para usuários comuns, mas a segurança real é garantida pelas regras do backend (Firestore).
+  - Todas as ações sensíveis são validadas tanto no frontend quanto no backend.
+
+## 📱 Responsividade
+- Funciona perfeitamente em celulares, tablets e computadores
+- Menu inferior adaptado para mobile
+
+## 💡 Dicas para iniciantes
+- Se não conseguir acessar um recurso, verifique se você é admin
+- Use o botão de "Adicionar" para registrar novas despesas
+- O dark mode pode ser ativado automaticamente pelo sistema
+- Para dúvidas, consulte este README ou peça ajuda!
+
+## 📝 Personalização
+- Você pode alterar as cores, categorias e textos editando os arquivos em `src/`
+- Para mudar regras de permissão, ajuste no console do Firebase (Firestore Rules)
+
+## 📦 Build para produção
+```bash
+npm run build
+# ou
+yarn build
 ```
-AppTesteBeta/
-├───client/                 # Frontend da aplicação React
-│   ├───public/             # Arquivos estáticos
-│   ├───src/                # Código fonte da aplicação
-│   │   ├───App.js          # Componente principal da aplicação
-│   │   ├───App.css         # Estilos globais
-│   │   ├───firebaseConfig.js # Configurações do Firebase
-│   │   ├───index.js        # Ponto de entrada da aplicação
-│   │   ├───components/     # Componentes reutilizáveis da UI
-│   │   │   ├───AdminPanel.js
-│   │   │   ├───AuthForms.js
-│   │   │   ├───ExpenseForm.js
-│   │   │   ├───ExpenseList.js
-│   │   │   ├───FamilyGroupManager.js
-│   │   │   ├───HeaderMenu.js
-│   │   │   ├───Modal.js
-│   │   │   ├───PersonTotalsDashboard.js
-│   │   │   └───TotalsDashboard.js
-│   │   ├───contexts/       # Contextos React para gerenciamento de estado global
-│   │   │   ├───AuthContext.js
-│   │   │   ├───ExpenseContext.js
-│   │   │   ├───FamilyContext.js
-│   │   │   └───ThemeContext.js
-│   │   └───hooks/          # Hooks personalizados
-│   │       └───usePersonTotals.js
-│   └───package.json        # Dependências e scripts do projeto React
-└───README.md               # Este arquivo
-```
+Os arquivos otimizados ficarão na pasta `build/`.
 
-## Contribuição
+## 📄 Licença
+Este projeto é open-source e pode ser adaptado livremente.
 
-Sinta-se à vontade para contribuir com o projeto. Por favor, siga as boas práticas de desenvolvimento e abra um pull request para suas alterações.
+---
 
-## Licença
-
-Este projeto está licenciado sob a licença MIT. Veja o arquivo `LICENSE` para mais detalhes. (Se aplicável)
+**Dúvidas? Sugestões?**
+Abra uma issue ou entre em contato!

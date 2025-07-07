@@ -71,7 +71,7 @@ export function FamilyProvider({ children }) {
 
     setupUserListener();
 
-    // Função de limpeza para o listener do usuário
+    // Função de limpeza do listener do usuário
     return () => {
       unsubscribeUser();
     };
@@ -165,7 +165,7 @@ export function FamilyProvider({ children }) {
         members: [currentUser.uid],
       });
 
-      // Atualizar o documento do usuário para incluir o familyGroupId
+      // Atualiza o documento do usuário para incluir o familyGroupId
       await setDoc(doc(db, 'users', currentUser.uid), {
         familyGroupId: newGroupRef.id,
       }, { merge: true });
@@ -248,12 +248,12 @@ export function FamilyProvider({ children }) {
       throw new Error('Grupo familiar não encontrado.');
     }
 
-    // Adicionar o usuário ao array de membros do grupo
+    // Adiciona o usuário ao array de membros do grupo
     await updateDoc(groupRef, {
       members: arrayUnion(currentUser.uid),
     });
 
-    // Atualizar o documento do usuário para incluir o familyGroupId
+    // Atualiza o documento do usuário para incluir o familyGroupId
     await setDoc(doc(db, 'users', currentUser.uid), {
       familyGroupId: groupId,
     }, { merge: true });
@@ -363,18 +363,18 @@ export function FamilyProvider({ children }) {
     }
 
     try {
-      // 1. Adicionar o usuário ao grupo familiar
+      // 1. Adiciona o usuário ao grupo familiar
       const groupRef = doc(db, 'familyGroups', groupId);
       await updateDoc(groupRef, {
         members: arrayUnion(requesterUid),
       });
 
-      // 2. Atualizar o familyGroupId do usuário solicitante
+      // 2. Atualiza o familyGroupId do usuário solicitante
       await setDoc(doc(db, 'users', requesterUid), {
         familyGroupId: groupId,
       }, { merge: true });
 
-      // 3. Atualizar o status da solicitação para 'accepted'
+      // 3. Atualiza o status da solicitação para 'accepted'
       await updateDoc(doc(db, 'joinRequests', requestId), {
         status: 'accepted',
         processedAt: serverTimestamp(),
@@ -395,7 +395,7 @@ export function FamilyProvider({ children }) {
     }
 
     try {
-      // Atualizar o status da solicitação para 'rejected'
+      // Atualiza o status da solicitação para 'rejected'
       await updateDoc(doc(db, 'joinRequests', requestId), {
         status: 'rejected',
         processedAt: serverTimestamp(),
