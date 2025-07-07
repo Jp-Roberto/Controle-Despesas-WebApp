@@ -1,6 +1,30 @@
 # App Família Despesas
 
+![GitHub repo size](https://img.shields.io/github/repo-size/Jp-Roberto/Controle-Despesas-WebApp)
+![GitHub stars](https://img.shields.io/github/stars/Jp-Roberto/Controle-Despesas-WebApp?style=social)
+![GitHub license](https://img.shields.io/github/license/Jp-Roberto/Controle-Despesas-WebApp)
+
 Um aplicativo moderno e fácil de usar para controle de despesas familiares, com visual bonito, responsivo e recursos de administração para grupos.
+
+---
+
+## 📑 Tabela de Conteúdos
+- [O que é este app?](#-o-que-é-este-app)
+- [Principais recursos](#-principais-recursos)
+- [Tecnologias utilizadas](#-tecnologias-utilizadas)
+- [Pré-requisitos](#️-pré-requisitos)
+- [Como instalar e rodar](#️-como-instalar-e-rodar)
+- [Como usar](#-como-usar)
+- [Segurança](#️-segurança)
+- [Responsividade](#-responsividade)
+- [Dicas para iniciantes](#-dicas-para-iniciantes)
+- [Personalização](#-personalização)
+- [Build para produção](#-build-para-produção)
+- [Como contribuir](#-como-contribuir)
+- [FAQ](#faq)
+- [Licença](#-licença)
+
+---
 
 ## ✨ O que é este app?
 
@@ -15,6 +39,13 @@ O **App Família Despesas** permite que famílias ou grupos controlem juntos seu
 - Permissões: admin e usuário comum
 - Visual moderno, responsivo e com dark mode
 
+## 🛠️ Tecnologias utilizadas
+- React.js (frontend)
+- Firebase Authentication & Firestore (backend)
+- CSS Modules para estilização
+- Chart.js para gráficos
+- Deploy fácil em Vercel, Netlify ou Firebase Hosting
+
 ## 🖥️ Pré-requisitos
 - [Node.js](https://nodejs.org/) (recomendado v18+)
 - [npm](https://www.npmjs.com/) ou [yarn](https://yarnpkg.com/)
@@ -24,7 +55,7 @@ O **App Família Despesas** permite que famílias ou grupos controlem juntos seu
 
 1. **Clone o repositório:**
    ```bash
-   git clone <URL_DO_REPOSITORIO>
+   git clone https://github.com/Jp-Roberto/Controle-Despesas-WebApp.git
    cd app-familia-despesas/client
    ```
 
@@ -116,6 +147,32 @@ npm run build
 yarn build
 ```
 Os arquivos otimizados ficarão na pasta `build/`.
+
+## 🤝 Como contribuir
+1. Faça um fork deste repositório
+2. Crie uma branch: `git checkout -b minha-feature`
+3. Faça suas alterações e commit: `git commit -m 'Minha nova feature'`
+4. Envie para o seu fork: `git push origin minha-feature`
+5. Abra um Pull Request explicando suas mudanças
+
+## 📸 Exemplos visuais
+> Adicione aqui prints de tela do app rodando (exemplo abaixo):
+
+![Tela de login](https://user-images.githubusercontent.com/0000000/000000000-00000000-0000-0000-0000-000000000000.png)
+![Dashboard](https://user-images.githubusercontent.com/0000000/000000000-00000000-0000-0000-0000-000000000000.png)
+
+## FAQ
+**1. O app é gratuito?**
+Sim, totalmente open-source!
+
+**2. Preciso de conta no Firebase?**
+Sim, para rodar localmente ou em produção.
+
+**3. Posso usar outro backend?**
+O app foi feito para Firebase, mas pode ser adaptado.
+
+**4. Como reportar bugs?**
+Abra uma issue no GitHub.
 
 ## 📄 Licença
 Este projeto é open-source e pode ser adaptado livremente.
